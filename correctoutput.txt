@@ -1,0 +1,99 @@
+
+===== CROSS-REFERENCE TABLE =====
+
+*** PROGRAM CDB Program ***
+
+Identifier       Line numbers    Type specification
+----------       ------------    ------------------
+i                002 003 003 005 009 009 013 013 013 014 016 016 016 016 016 016 017
+                                 Defined as: variable
+                                 Scope nesting level: 1
+                                 Type form = scalar, Type id = real
+j                002 006 006 008 008 017 017 020 021 021 021
+                                 Defined as: variable
+                                 Scope nesting level: 1
+                                 Type form = scalar, Type id = real
+
+===== INTERMEDIATE CODE =====
+
+*** PROGRAM CDB Program ***
+
+<script>
+    <assignment>
+        <variable id="i" level="1" index="0" type_id="real" />
+        <integerConstant value="2" type_id="integer" />
+    </assignment>
+    <ifStatement>
+        <EE>
+            <variable id="i" level="1" index="0" type_id="real" />
+            <integerConstant value="2" type_id="integer" />
+        </EE>
+        <assignment>
+            <variable id="j" level="1" index="1" type_id="real" />
+            <realConstant value="3.4" type_id="real" />
+        </assignment>
+        <compoundStatement>
+            <assignment>
+                <variable id="j" level="1" index="1" type_id="real" />
+                <realConstant value="4.3" type_id="real" />
+            </assignment>
+            <assignment>
+                <variable id="i" level="1" index="0" type_id="real" />
+                <integerConstant value="1" type_id="integer" />
+            </assignment>
+        </compoundStatement>
+    </ifStatement>
+    <doLoop>
+        <compoundStatement>
+            <assignment>
+                <variable id="i" level="1" index="0" type_id="real" />
+                <add type_id="real">
+                    <variable id="i" level="1" index="0" type_id="real" />
+                    <integerConstant value="1" type_id="integer" />
+                </add>
+            </assignment>
+        </compoundStatement>
+        <LT>
+            <variable id="i" level="1" index="0" type_id="real" />
+            <integerConstant value="10" type_id="integer" />
+        </LT>
+    </doLoop>
+    <forLoop>
+        <assignment>
+            <variable id="i" level="1" index="0" type_id="real" />
+            <integerConstant value="0" type_id="integer" />
+        </assignment>
+        <LT>
+            <variable id="i" level="1" index="0" type_id="real" />
+            <integerConstant value="10" type_id="integer" />
+        </LT>
+        <assignment>
+            <variable id="i" level="1" index="0" type_id="real" />
+            <add type_id="real">
+                <variable id="i" level="1" index="0" type_id="real" />
+                <integerConstant value="1" type_id="integer" />
+            </add>
+        </assignment>
+        <compoundStatement>
+            <assignment>
+                <variable id="j" level="1" index="1" type_id="real" />
+                <variable id="i" level="1" index="0" type_id="real" />
+            </assignment>
+        </compoundStatement>
+    </forLoop>
+    <whileLoop>
+        <LT>
+            <variable id="j" level="1" index="1" type_id="real" />
+            <integerConstant value="0" type_id="integer" />
+        </LT>
+        <compoundStatement>
+            <assignment>
+                <variable id="j" level="1" index="1" type_id="real" />
+                <subtract type_id="real">
+                    <variable id="j" level="1" index="1" type_id="real" />
+                    <integerConstant value="1" type_id="integer" />
+                </subtract>
+            </assignment>
+        </compoundStatement>
+    </whileLoop>
+</script>
