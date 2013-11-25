@@ -7,6 +7,7 @@ import java.io.*;
 import wci.intermediate.*;
 import wci.intermediate.symtabimpl.*;
 import wci.backend.*;
+import wci.backend.compiler.*;
 import wci.util.*;
 
 import static wci.intermediate.symtabimpl.SymTabKeyImpl.*;
@@ -59,13 +60,19 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
         // Print the parse tree.
         ParseTreePrinter treePrinter = new ParseTreePrinter(System.out);
         treePrinter.print(symTabStack);
+
+        // Compile the code.
+        Backend cg = BackendFactory.createBackend("compile");
+        (new File("dummy.j")).createNewFile();
+        PrintWriter writer = new PrintWriter("dummy.j");
+        cg.process(iCode, symTabStack, writer);
     }
 
   static final public SimpleNode script() throws ParseException {
-                       /*@bgen(jjtree) script */
-                       ASTscript jjtn000 = new ASTscript(JJTSCRIPT);
-                       boolean jjtc000 = true;
-                       jjtree.openNodeScope(jjtn000);SimpleNode rootNode;
+                                 /*@bgen(jjtree) COMPOUND */
+                                 ASTCOMPOUND jjtn000 = new ASTCOMPOUND(JJTCOMPOUND);
+                                 boolean jjtc000 = true;
+                                 jjtree.openNodeScope(jjtn000);SimpleNode rootNode;
     try {
     programId = symTabStack.enterLocal("CDB Program");
     programId.setDefinition(DefinitionImpl.PROGRAM);
@@ -500,8 +507,8 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
   }
 
   static final public void assignment() throws ParseException {
-                     /*@bgen(jjtree) assignment */
-  ASTassignment jjtn000 = new ASTassignment(JJTASSIGNMENT);
+                             /*@bgen(jjtree) ASSIGN */
+  ASTASSIGN jjtn000 = new ASTASSIGN(JJTASSIGN);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
     try {
@@ -898,7 +905,7 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
         variableId.appendLineNumber(token.beginLine);
         TypeSpec type = variableId.getTypeSpec();
         jjtn000.setTypeSpec(type);
-        jjtn000.setAttribute(ID, variableId);
+        jjtn000.setAttribute(ID, token.image);
     } finally {
       if (jjtc000) {
         jjtree.closeNodeScope(jjtn000, true);

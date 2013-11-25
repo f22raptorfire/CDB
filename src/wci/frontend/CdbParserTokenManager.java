@@ -5,6 +5,7 @@ import java.io.*;
 import wci.intermediate.*;
 import wci.intermediate.symtabimpl.*;
 import wci.backend.*;
+import wci.backend.compiler.*;
 import wci.util.*;
 import static wci.intermediate.symtabimpl.SymTabKeyImpl.*;
 import static wci.intermediate.symtabimpl.DefinitionImpl.*;

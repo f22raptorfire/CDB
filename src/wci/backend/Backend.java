@@ -45,6 +45,6 @@ public abstract class Backend
      * @throws Exception if an error occurred.
      */
     public abstract void process(ICode iCode, SymTabStack symTabStack,
-                                 String objectFilePath)
+                                 PrintWriter objectFilePath)
         throws Exception;
 }

@@ -43,6 +43,14 @@ public class ICodeNodeImpl
     }
 
     /**
+     * Set the type  of this node.
+     * @param typeSpec the type to set.
+     */
+    public void setType(ICodeNodeType type) {
+    	this.type = type;
+    }
+    
+    /**
      * Getter.
      * @return the node type.
      */
@@ -62,7 +70,7 @@ public class ICodeNodeImpl
 
     /**
      * Set the type specification of this node.
-     * @param typeSpec the type sprcification to set.
+     * @param typeSpec the type specification to set.
      */
     public void setTypeSpec(TypeSpec typeSpec)
     {
@@ -85,6 +93,9 @@ public class ICodeNodeImpl
      */
     public ICodeNode addChild(ICodeNode node)
     {
+    	if (children == null) {
+    		children = new ArrayList<ICodeNode>();
+    	}
         if (node != null) {
             children.add(node);
             ((ICodeNodeImpl) node).parent = this;

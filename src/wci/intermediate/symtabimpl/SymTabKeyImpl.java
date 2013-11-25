@@ -20,5 +20,8 @@ public enum SymTabKeyImpl implements SymTabKey
     ROUTINE_PARMS, ROUTINE_ROUTINES, ROUTINE_LOCALS_COUNT,
 
     // Variable or record field value.
-    DATA_VALUE
+    DATA_VALUE,
+    
+    // Jasmin local number.
+    LOCAL_NUM
 }
