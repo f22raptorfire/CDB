@@ -338,7 +338,7 @@ void factor() #void : {}
   | realConstant()
 }
 
-void variable() : {}
+void variable() #VARIABLE : {}
 {
     <IDENTIFIER> {
         SymTabEntry variableId = symTabStack.lookup(token.image);
@@ -349,7 +349,7 @@ void variable() : {}
     }
 }
 
-void integerConstant() : {}
+void integerConstant() #INTEGER_CONSTANT : {}
 {
     <INTEGER> {
         jjtThis.setTypeSpec(Predefined.integerType);
@@ -357,7 +357,7 @@ void integerConstant() : {}
     }
 }
 
-void realConstant() : {}
+void realConstant() #REAL_CONSTANT : {}
 {
     <REAL> {
         jjtThis.setTypeSpec(Predefined.realType);

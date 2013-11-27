@@ -1,5 +1,5 @@
 @integer i;
-@integer j;
-j = 1;
+@real j;
+j = 1.2;
 i = 8;
-PRINT i + j;
+PRINT j;

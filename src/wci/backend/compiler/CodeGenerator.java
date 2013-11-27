@@ -70,14 +70,6 @@ public class CodeGenerator extends Backend
     	StatementCodeGenerator gen = new StatementCodeGenerator(this);
     	objectFile.append(gen.generate(rootNode).toString());
     	
-    	objectFile.append(";Print the integer in variable i\n");
-    	objectFile.append("\tgetstatic     java/lang/System/out Ljava/io/PrintStream;\n");
-    	objectFile.append("\tgetstatic Program/i I\n");
-    	objectFile.append("\tinvokevirtual java/io/PrintStream/println(I)V\n");
-    	objectFile.append(";Print the integer in variable j\n");
-    	objectFile.append("\tgetstatic     java/lang/System/out Ljava/io/PrintStream;\n");
-    	objectFile.append("\tgetstatic Program/j I\n");
-    	objectFile.append("\tinvokevirtual java/io/PrintStream/println(I)V\n");
     	objectFile.append("\treturn\n");
     	objectFile.append("\n.end method\n");
     	objectFile.close();

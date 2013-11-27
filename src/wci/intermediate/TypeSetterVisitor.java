@@ -2,6 +2,7 @@ package wci.intermediate;
 
 import wci.frontend.*;
 import wci.intermediate.*;
+import wci.intermediate.icodeimpl.ICodeNodeTypeImpl;
 import wci.intermediate.symtabimpl.*;
 
 public class TypeSetterVisitor extends CdbParserVisitorAdapter
@@ -51,18 +52,21 @@ public class TypeSetterVisitor extends CdbParserVisitorAdapter
         return obj;
     }
     
-    public Object visit(ASTvariable node, Object data)
+    public Object visit(ASTVARIABLE node, Object data)
     {
+		node.setType(ICodeNodeTypeImpl.VARIABLE);
         return data;
     }
     
-    public Object visit(ASTintegerConstant node, Object data)
+    public Object visit(ASTINTEGER_CONSTANT node, Object data)
     {
+		node.setType(ICodeNodeTypeImpl.INTEGER_CONSTANT);
         return data;
     }
     
-    public Object visit(ASTrealConstant node, Object data)
+    public Object visit(ASTREAL_CONSTANT node, Object data)
     {
+		node.setType(ICodeNodeTypeImpl.REAL_CONSTANT);
         return data;
     }
 }

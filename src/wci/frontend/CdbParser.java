@@ -934,8 +934,8 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
   }
 
   static final public void variable() throws ParseException {
-                   /*@bgen(jjtree) variable */
-  ASTvariable jjtn000 = new ASTvariable(JJTVARIABLE);
+                             /*@bgen(jjtree) VARIABLE */
+  ASTVARIABLE jjtn000 = new ASTVARIABLE(JJTVARIABLE);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
     try {
@@ -955,8 +955,8 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
   }
 
   static final public void integerConstant() throws ParseException {
-                          /*@bgen(jjtree) integerConstant */
-  ASTintegerConstant jjtn000 = new ASTintegerConstant(JJTINTEGERCONSTANT);
+                                            /*@bgen(jjtree) INTEGER_CONSTANT */
+  ASTINTEGER_CONSTANT jjtn000 = new ASTINTEGER_CONSTANT(JJTINTEGER_CONSTANT);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
     try {
@@ -973,8 +973,8 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
   }
 
   static final public void realConstant() throws ParseException {
-                       /*@bgen(jjtree) realConstant */
-  ASTrealConstant jjtn000 = new ASTrealConstant(JJTREALCONSTANT);
+                                      /*@bgen(jjtree) REAL_CONSTANT */
+  ASTREAL_CONSTANT jjtn000 = new ASTREAL_CONSTANT(JJTREAL_CONSTANT);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
     try {

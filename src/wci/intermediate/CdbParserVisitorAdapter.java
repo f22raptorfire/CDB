@@ -10,16 +10,16 @@ import wci.frontend.ASTFOR;
 import wci.frontend.ASTGE;
 import wci.frontend.ASTGT;
 import wci.frontend.ASTIF;
+import wci.frontend.ASTINTEGER_CONSTANT;
 import wci.frontend.ASTLE;
 import wci.frontend.ASTLT;
 import wci.frontend.ASTMULTIPLY;
 import wci.frontend.ASTNE;
 import wci.frontend.ASTPRINT;
+import wci.frontend.ASTREAL_CONSTANT;
 import wci.frontend.ASTSUBTRACT;
+import wci.frontend.ASTVARIABLE;
 import wci.frontend.ASTWHILE;
-import wci.frontend.ASTintegerConstant;
-import wci.frontend.ASTrealConstant;
-import wci.frontend.ASTvariable;
 import wci.frontend.CdbParserVisitor;
 import wci.frontend.SimpleNode;
 import wci.intermediate.icodeimpl.ICodeKeyImpl;
@@ -63,23 +63,6 @@ public class CdbParserVisitorAdapter implements CdbParserVisitor
     }
 
     public Object visit(ASTDIVIDE node, Object data)
-    {
-        return node.childrenAccept(this, data);
-    }
-
-    public Object visit(ASTvariable node, Object data)
-    {
-    	System.out.println("Variable");
-        return node.childrenAccept(this, data);
-    }
-
-    public Object visit(ASTintegerConstant node, Object data)
-    {
-    	System.out.println("Integer");
-        return node.childrenAccept(this, data);
-    }
-
-    public Object visit(ASTrealConstant node, Object data)
     {
         return node.childrenAccept(this, data);
     }
@@ -156,5 +139,23 @@ public class CdbParserVisitorAdapter implements CdbParserVisitor
 			node.addChild((ICodeNode) node.jjtGetChild(i));
 		}
 		return node.childrenAccept(this, data);
+	}
+
+	@Override
+	public Object visit(ASTVARIABLE node, Object data) {
+		node.setType(ICodeNodeTypeImpl.VARIABLE);
+		return data;
+	}
+
+	@Override
+	public Object visit(ASTINTEGER_CONSTANT node, Object data) {
+		node.setType(ICodeNodeTypeImpl.INTEGER_CONSTANT);
+		return data;
+	}
+
+	@Override
+	public Object visit(ASTREAL_CONSTANT node, Object data) {
+		node.setType(ICodeNodeTypeImpl.REAL_CONSTANT);
+		return data;
 	}
 }

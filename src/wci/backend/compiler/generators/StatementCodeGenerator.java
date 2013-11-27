@@ -34,7 +34,7 @@ public class StatementCodeGenerator extends CodeGenerator
     public Object generate(ICodeNode node)
     {
         ICodeNodeTypeImpl nodeType = (ICodeNodeTypeImpl) node.getType();
-
+        System.out.println(node);
         switch (nodeType) {
 
 	        case ASSIGN: {
@@ -53,12 +53,17 @@ public class StatementCodeGenerator extends CodeGenerator
                 return printGenerator.generate(node);
             }
 
-            /*
-            case IF: {
-                IfExecutor ifExecutor = new IfExecutor(this);
-                return ifExecutor.execute(node);
+            case INTEGER_CONSTANT: {
+                IntegerCodeGenerator integerGenerator = new IntegerCodeGenerator(this);
+                return integerGenerator.generate(node);
             }
 
+            case VARIABLE: {
+            	VariableCodeGenerator variableGenerator = new VariableCodeGenerator(this);
+            	return variableGenerator.generate(node);
+            }
+            
+            /*
             case SELECT: {
                 SelectExecutor selectExecutor = new SelectExecutor(this);
                 return selectExecutor.execute(node);
