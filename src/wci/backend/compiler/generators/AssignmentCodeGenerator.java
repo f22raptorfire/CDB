@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import wci.backend.compiler.CodeGenerator;
 import wci.intermediate.ICodeNode;
+import wci.intermediate.SymTab;
 import wci.intermediate.SymTabEntry;
 import wci.intermediate.icodeimpl.ICodeKeyImpl;
 import wci.intermediate.symtabimpl.SymTabKeyImpl;
@@ -24,15 +25,12 @@ public class AssignmentCodeGenerator extends StatementCodeGenerator {
     {
     	ArrayList<ICodeNode> children = node.getChildren();
     	
+    	SymTabEntry programId = symTabStack.getProgramId();
+    	String prefix = programId.getName() + "/", type;
+    	
     	SymTabEntry entry = symTabStack.lookup((String)children.get(0).getAttribute(ICodeKeyImpl.ID));
+    	type = entry.getTypeSpec().getTypeId();
     	
-    	if (entry.getAttribute(SymTabKeyImpl.LOCAL_NUM) == null) {
-    		//TODO this increments differently depending on how big the variable is
-    		entry.setAttribute(SymTabKeyImpl.LOCAL_NUM, varCount);
-    		varCount++;
-    	}
-    	
-    	String storage = "" + entry.getAttribute(SymTabKeyImpl.LOCAL_NUM);
     	String value = "" + children.get(1).getAttribute(ICodeKeyImpl.VALUE);
     	
     	String result = ";" + (String)children.get(0).getAttribute(ICodeKeyImpl.ID)
@@ -40,8 +38,7 @@ public class AssignmentCodeGenerator extends StatementCodeGenerator {
     	
     	result += "\tldc " + value + "\n";
     	
-    	//TODO switch (variable type) {
-    	result += "\tistore " + storage + "\n";
+    	result += "\tputstatic " + prefix + entry.getName() + " " + type + "\n";
     	
     	return result;
     }

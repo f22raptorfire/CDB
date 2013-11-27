@@ -51,4 +51,10 @@ public interface TypeSpec
      * @return the base type of this type.
      */
     public TypeSpec baseType();
+
+	public void setDataSize(int i);
+	public int getDataSize();
+	
+	public void setTypeId(String id);
+	public String getTypeId();
 }

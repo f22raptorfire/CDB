@@ -4,7 +4,6 @@ import java.util.HashMap;
 
 import wci.intermediate.*;
 import wci.intermediate.symtabimpl.Predefined;
-
 import static wci.intermediate.typeimpl.TypeFormImpl.ARRAY;
 import static wci.intermediate.typeimpl.TypeFormImpl.SUBRANGE;
 import static wci.intermediate.typeimpl.TypeKeyImpl.*;
@@ -23,6 +22,8 @@ public class TypeSpecImpl
 {
     private TypeForm form;           // type form
     private SymTabEntry identifier;  // type identifier
+    private int dataSize;
+    private String id;
 
     /**
      * Constructor.
@@ -124,4 +125,22 @@ public class TypeSpecImpl
         return form == SUBRANGE ? (TypeSpec) getAttribute(SUBRANGE_BASE_TYPE)
                                 : this;
     }
+    
+    public void setDataSize(int size) {
+    	dataSize = size;
+    }
+    
+    public int getDataSize() {
+    	return dataSize;
+    }
+
+	@Override
+	public void setTypeId(String id) {
+		this.id = id;		
+	}
+
+	@Override
+	public String getTypeId() {
+		return id;
+	}
 }

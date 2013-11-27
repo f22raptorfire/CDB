@@ -1,8 +1,11 @@
 package wci.backend.compiler;
 
 import java.io.*;
+import java.util.ArrayList;
 
 import wci.intermediate.*;
+import wci.intermediate.symtabimpl.DefinitionImpl;
+import wci.intermediate.symtabimpl.SymTabKeyImpl;
 import wci.backend.*;
 import wci.backend.compiler.generators.StatementCodeGenerator;
 
@@ -44,20 +47,36 @@ public class CodeGenerator extends Backend
         this.iCode = iCode;
         this.objectFile = objectFile;
         this.varCount = 0;
-        
+
     	printHeader(objectFile);
+
+    	SymTabEntry programId = symTabStack.getProgramId();
+    	SymTab program = (SymTab) programId.getAttribute(SymTabKeyImpl.ROUTINE_SYMTAB);
+    	ArrayList<SymTabEntry> entries = program.sortedEntries();
+    	String type;
+    	for (SymTabEntry entry : entries) {
+    		if (entry.getDefinition() == DefinitionImpl.VARIABLE) {
+    			type = entry.getTypeSpec().getTypeId();
+    			objectFile.append(".field public static " + entry.getName() + " " + type + "\n");
+    		}
+    	}
+    	objectFile.append("\n");
 
     	objectFile.append(".method public static main([Ljava/lang/String;)V\n");
     	objectFile.append(".limit stack  " + STACK_LIMIT + "\n");
     	objectFile.append(".limit locals 10\n\n");
-    	
+
     	ICodeNode rootNode = (ICodeNode) iCode.getRoot();
     	StatementCodeGenerator gen = new StatementCodeGenerator(this);
     	objectFile.append(gen.generate(rootNode).toString());
     	
-    	objectFile.append(";Print the integer in location 0\n");
+    	objectFile.append(";Print the integer in variable i\n");
     	objectFile.append("\tgetstatic     java/lang/System/out Ljava/io/PrintStream;\n");
-    	objectFile.append("\tiload 0\n");
+    	objectFile.append("\tgetstatic Program/i I\n");
+    	objectFile.append("\tinvokevirtual java/io/PrintStream/println(I)V\n");
+    	objectFile.append(";Print the integer in variable j\n");
+    	objectFile.append("\tgetstatic     java/lang/System/out Ljava/io/PrintStream;\n");
+    	objectFile.append("\tgetstatic Program/j I\n");
     	objectFile.append("\tinvokevirtual java/io/PrintStream/println(I)V\n");
     	objectFile.append("\treturn\n");
     	objectFile.append("\n.end method\n");
@@ -65,7 +84,8 @@ public class CodeGenerator extends Backend
     }
     
     private void printHeader(PrintWriter objectFile) throws FileNotFoundException {
-    	objectFile.append(".class public dummyname\n");
+    	SymTabEntry programId = symTabStack.getProgramId();
+    	objectFile.append(".class public " + programId.getName() + "\n");
     	objectFile.append(".super java/lang/Object\n");
     	objectFile.append("\n");
     }

@@ -48,12 +48,12 @@ public class StatementCodeGenerator extends CodeGenerator
                 return compoundGenerator.generate(node);
             }
 
-/*
-            case LOOP: {
-                LoopExecutor loopExecutor = new LoopExecutor(this);
-                return loopExecutor.execute(node);
+            case PRINT: {
+                PrintCodeGenerator printGenerator = new PrintCodeGenerator(this);
+                return printGenerator.generate(node);
             }
 
+            /*
             case IF: {
                 IfExecutor ifExecutor = new IfExecutor(this);
                 return ifExecutor.execute(node);
@@ -67,7 +67,7 @@ public class StatementCodeGenerator extends CodeGenerator
             case NO_OP: return null;
 */
             default: {
-                return null;
+                return "";
             }
         }
     }

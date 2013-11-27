@@ -23,28 +23,28 @@ public class TypeSetterVisitor extends CdbParserVisitorAdapter
         node.setTypeSpec(type);
     }
     
-    public Object visit(ASTadd node, Object data)
+    public Object visit(ASTADD node, Object data)
     {
         Object obj = super.visit(node, data);
         setType(node);
         return obj;
     }
 
-    public Object visit(ASTsubtract node, Object data)
+    public Object visit(ASTSUBTRACT node, Object data)
     {
         Object obj = super.visit(node, data);
         setType(node);
         return obj;
     }
 
-    public Object visit(ASTmultiply node, Object data)
+    public Object visit(ASTMULTIPLY node, Object data)
     {
         Object obj = super.visit(node, data);
         setType(node);
         return obj;
     }
 
-    public Object visit(ASTdivide node, Object data)
+    public Object visit(ASTDIVIDE node, Object data)
     {
         Object obj = super.visit(node, data);
         setType(node);

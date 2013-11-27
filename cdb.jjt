@@ -48,7 +48,7 @@ public class CdbParser
             ? sourceFilePath.substring(0, truncatedLength) + OUTPUT_SUFFIX
             : sourceFilePath + OUTPUT_SUFFIX;
 
-        // Parse a Cdb program.
+        // Parse a CDB program.
         Reader    reader = new FileReader(sourceFilePath);
         CdbParser parser = new CdbParser(reader);
         SimpleNode rootNode = parser.script();
@@ -78,7 +78,6 @@ public class CdbParser
     }
 }
 PARSER_END(CdbParser)
-
 
 SKIP: {
     " " | "\r" | "\t" | "\n" | "\r\n"
@@ -112,6 +111,7 @@ TOKEN: { /* Reserved words */
   | <WHILE     : "WHILE">
   | <FOR       : "FOR">
   | <DO        : "DO">
+  | <PRINT     : "PRINT">
 }
 
 TOKEN: /* Special symbols */
@@ -169,7 +169,7 @@ TOKEN: { /*	Error token */
 SimpleNode script() #COMPOUND : {SimpleNode rootNode;}
 {
   {
-    programId = symTabStack.enterLocal("CDB Program");
+    programId = symTabStack.enterLocal("Program");
     programId.setDefinition(DefinitionImpl.PROGRAM);
     programId.setAttribute(ROUTINE_SYMTAB, symTabStack.push());
     symTabStack.setProgramId(programId);
@@ -195,6 +195,7 @@ void statement() #void : {}
   (
        assignmentStatement()
     |  declarationStatement()
+    |  printStatement()
     |  ifStatement()
     |  doLoop()
     |  forLoop()
@@ -202,7 +203,7 @@ void statement() #void : {}
   )
 }
 
-SimpleNode compoundStatement() : {}
+SimpleNode compoundStatement() #COMPOUND : {}
 {
     <LEFT_BRACE>
     (statement())+
@@ -210,7 +211,7 @@ SimpleNode compoundStatement() : {}
     { return jjtThis; }
 }
 
-void whileLoop() : {}
+void whileLoop() #WHILE : {}
 {
   <WHILE> <LEFT_PAREN> expression() <RIGHT_PAREN>
   (
@@ -219,7 +220,7 @@ void whileLoop() : {}
   )
 }
 
-void forLoop() : {}
+void forLoop() #FOR : {}
 {
   <FOR>
   <LEFT_PAREN>
@@ -235,7 +236,7 @@ void forLoop() : {}
   )
 }
 
-void doLoop() : {}
+void doLoop() #DO : {}
 {
 	<DO>
 	(
@@ -245,7 +246,7 @@ void doLoop() : {}
     <WHILE> <LEFT_PAREN> expression() <RIGHT_PAREN> <SEMICOLON>
 }
 
-void ifStatement() : {}
+void ifStatement() #IF : {}
 {
 	<IF> <LEFT_PAREN> expression() <RIGHT_PAREN>
 	(
@@ -284,6 +285,9 @@ void declarationStatement() #void : {ArrayList<SymTabEntry> variableList;
     <SEMICOLON>
 }
 
+void printStatement() #PRINT : {}
+{	<PRINT> simpleExpression() <SEMICOLON>}
+
 void assignmentStatement() #void : {}
 {
     assignment()
@@ -314,16 +318,16 @@ void expression() #void : {}
 void simpleExpression() #void : {}
 {
   term() (
-        "+" term() #add(2)
-      | "-" term() #subtract(2)
+        "+" term() #ADD(2)
+      | "-" term() #SUBTRACT(2)
     )*     
 }
 
 void term() #void : {}
 {
     factor() (
-        "*" factor() #multiply(2)
-      | "/" factor() #divide(2)
+        "*" factor() #MULTIPLY(2)
+      | "/" factor() #DIVIDE(2)
     )*     
 }
 

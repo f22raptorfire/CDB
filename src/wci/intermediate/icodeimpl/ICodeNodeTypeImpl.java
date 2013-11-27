@@ -16,7 +16,7 @@ public enum ICodeNodeTypeImpl implements ICodeNodeType
     PROGRAM, PROCEDURE, FUNCTION,
 
     // Statements
-    COMPOUND, ASSIGN, LOOP, TEST, CALL, PARAMETERS,
+    COMPOUND, ASSIGN, LOOP, TEST, CALL, PARAMETERS, PRINT,
     IF, SELECT, SELECT_BRANCH, SELECT_CONSTANTS, NO_OP,
 
     // Relational operators

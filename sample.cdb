@@ -1,0 +1,34 @@
+DATABASE "c:\users\jason\cs153";
+
+CREATE sample_table {
+	@integer A,
+	@string B,
+	@real C
+};
+
+LOAD previous_table;
+IF EXISTS previous_table {
+	PROMPT SHOW previous_table;
+	DROP previous_table;
+};
+
+@integer alpha;
+@string beta;
+alpha = 2;
+beta = "first";
+
+ADD sample_table (alpha, beta, alpha/3);
+PROMPT SHOW sample_table;
+PROMPT ADD sample_table;
+PROMPT SHOW sample_table;
+PROMPT ADD sample_table COLUMNS (B, C) WHERE (A = 2);
+PROMPT SHOW sample_table COLUMNS (B, C) WHERE (A = 2);
+
+@integer i;
+
+for (i = 0; i < 3; i = i + 1) {
+	PROMPT ADD sample_table;
+};
+
+PROMPT SHOW sample_table;
+RENAME sample_table TO previous_table;

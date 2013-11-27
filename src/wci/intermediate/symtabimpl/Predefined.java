@@ -79,6 +79,8 @@ public class Predefined
         integerId = symTabStack.enterLocal("integer");
         integerType = TypeFactory.createType(SCALAR);
         integerType.setIdentifier(integerId);
+        integerType.setDataSize(1);
+        integerType.setTypeId("I");
         integerId.setDefinition(DefinitionImpl.TYPE);
         integerId.setTypeSpec(integerType);
 
@@ -86,6 +88,8 @@ public class Predefined
         realId = symTabStack.enterLocal("real");
         realType = TypeFactory.createType(SCALAR);
         realType.setIdentifier(realId);
+        realType.setDataSize(1);
+        realType.setTypeId("F");
         realId.setDefinition(DefinitionImpl.TYPE);
         realId.setTypeSpec(realType);
 
@@ -93,9 +97,11 @@ public class Predefined
         booleanId = symTabStack.enterLocal("boolean");
         booleanType = TypeFactory.createType(ENUMERATION);
         booleanType.setIdentifier(booleanId);
+        booleanType.setDataSize(1);
+        booleanType.setTypeId("Z");
         booleanId.setDefinition(DefinitionImpl.TYPE);
         booleanId.setTypeSpec(booleanType);
-
+        
         // Type char.
         charId = symTabStack.enterLocal("char");
         charType = TypeFactory.createType(SCALAR);

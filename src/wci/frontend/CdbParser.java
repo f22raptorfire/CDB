@@ -39,7 +39,7 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
             ? sourceFilePath.substring(0, truncatedLength) + OUTPUT_SUFFIX
             : sourceFilePath + OUTPUT_SUFFIX;
 
-        // Parse a Cdb program.
+        // Parse a CDB program.
         Reader    reader = new FileReader(sourceFilePath);
         CdbParser parser = new CdbParser(reader);
         SimpleNode rootNode = parser.script();
@@ -74,7 +74,7 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
                                  boolean jjtc000 = true;
                                  jjtree.openNodeScope(jjtn000);SimpleNode rootNode;
     try {
-    programId = symTabStack.enterLocal("CDB Program");
+    programId = symTabStack.enterLocal("Program");
     programId.setDefinition(DefinitionImpl.PROGRAM);
     programId.setAttribute(ROUTINE_SYMTAB, symTabStack.push());
     symTabStack.setProgramId(programId);
@@ -86,6 +86,7 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
           case WHILE:
           case FOR:
           case DO:
+          case PRINT:
           case AT:
           case IDENTIFIER:
             statement();
@@ -111,6 +112,7 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
         case WHILE:
         case FOR:
         case DO:
+        case PRINT:
         case AT:
         case IDENTIFIER:
         case ERROR:
@@ -155,6 +157,9 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
     case AT:
       declarationStatement();
       break;
+    case PRINT:
+      printStatement();
+      break;
     case IF:
       ifStatement();
       break;
@@ -175,8 +180,8 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
   }
 
   static final public SimpleNode compoundStatement() throws ParseException {
-                                  /*@bgen(jjtree) compoundStatement */
-  ASTcompoundStatement jjtn000 = new ASTcompoundStatement(JJTCOMPOUNDSTATEMENT);
+                                            /*@bgen(jjtree) COMPOUND */
+  ASTCOMPOUND jjtn000 = new ASTCOMPOUND(JJTCOMPOUND);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
     try {
@@ -189,6 +194,7 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
         case WHILE:
         case FOR:
         case DO:
+        case PRINT:
         case AT:
         case IDENTIFIER:
           ;
@@ -225,8 +231,8 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
   }
 
   static final public void whileLoop() throws ParseException {
-                    /*@bgen(jjtree) whileLoop */
-  ASTwhileLoop jjtn000 = new ASTwhileLoop(JJTWHILELOOP);
+                           /*@bgen(jjtree) WHILE */
+  ASTWHILE jjtn000 = new ASTWHILE(JJTWHILE);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
     try {
@@ -242,6 +248,7 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
       case WHILE:
       case FOR:
       case DO:
+      case PRINT:
       case AT:
       case IDENTIFIER:
         statement();
@@ -273,8 +280,8 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
   }
 
   static final public void forLoop() throws ParseException {
-                  /*@bgen(jjtree) forLoop */
-  ASTforLoop jjtn000 = new ASTforLoop(JJTFORLOOP);
+                       /*@bgen(jjtree) FOR */
+  ASTFOR jjtn000 = new ASTFOR(JJTFOR);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
     try {
@@ -317,6 +324,7 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
       case WHILE:
       case FOR:
       case DO:
+      case PRINT:
       case AT:
       case IDENTIFIER:
         statement();
@@ -348,8 +356,8 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
   }
 
   static final public void doLoop() throws ParseException {
-                 /*@bgen(jjtree) doLoop */
-  ASTdoLoop jjtn000 = new ASTdoLoop(JJTDOLOOP);
+                     /*@bgen(jjtree) DO */
+  ASTDO jjtn000 = new ASTDO(JJTDO);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
     try {
@@ -362,6 +370,7 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
       case WHILE:
       case FOR:
       case DO:
+      case PRINT:
       case AT:
       case IDENTIFIER:
         statement();
@@ -398,8 +407,8 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
   }
 
   static final public void ifStatement() throws ParseException {
-                      /*@bgen(jjtree) ifStatement */
-  ASTifStatement jjtn000 = new ASTifStatement(JJTIFSTATEMENT);
+                          /*@bgen(jjtree) IF */
+  ASTIF jjtn000 = new ASTIF(JJTIF);
   boolean jjtc000 = true;
   jjtree.openNodeScope(jjtn000);
     try {
@@ -415,6 +424,7 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
       case WHILE:
       case FOR:
       case DO:
+      case PRINT:
       case AT:
       case IDENTIFIER:
         statement();
@@ -435,6 +445,7 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
         case WHILE:
         case FOR:
         case DO:
+        case PRINT:
         case AT:
         case IDENTIFIER:
           statement();
@@ -499,6 +510,36 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
                         variableId.setTypeSpec(type);
             }
     jj_consume_token(SEMICOLON);
+  }
+
+  static final public void printStatement() throws ParseException {
+                                /*@bgen(jjtree) PRINT */
+  ASTPRINT jjtn000 = new ASTPRINT(JJTPRINT);
+  boolean jjtc000 = true;
+  jjtree.openNodeScope(jjtn000);
+    try {
+      jj_consume_token(PRINT);
+      simpleExpression();
+      jj_consume_token(SEMICOLON);
+    } catch (Throwable jjte000) {
+          if (jjtc000) {
+            jjtree.clearNodeScope(jjtn000);
+            jjtc000 = false;
+          } else {
+            jjtree.popNode();
+          }
+          if (jjte000 instanceof RuntimeException) {
+            {if (true) throw (RuntimeException)jjte000;}
+          }
+          if (jjte000 instanceof ParseException) {
+            {if (true) throw (ParseException)jjte000;}
+          }
+          {if (true) throw (Error)jjte000;}
+    } finally {
+          if (jjtc000) {
+            jjtree.closeNodeScope(jjtn000, true);
+          }
+    }
   }
 
   static final public void assignmentStatement() throws ParseException {
@@ -738,7 +779,7 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case PLUS:
         jj_consume_token(PLUS);
-              ASTadd jjtn001 = new ASTadd(JJTADD);
+              ASTADD jjtn001 = new ASTADD(JJTADD);
               boolean jjtc001 = true;
               jjtree.openNodeScope(jjtn001);
         try {
@@ -765,7 +806,7 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
         break;
       case MINUS:
         jj_consume_token(MINUS);
-              ASTsubtract jjtn002 = new ASTsubtract(JJTSUBTRACT);
+              ASTSUBTRACT jjtn002 = new ASTSUBTRACT(JJTSUBTRACT);
               boolean jjtc002 = true;
               jjtree.openNodeScope(jjtn002);
         try {
@@ -814,7 +855,7 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case STAR:
         jj_consume_token(STAR);
-              ASTmultiply jjtn001 = new ASTmultiply(JJTMULTIPLY);
+              ASTMULTIPLY jjtn001 = new ASTMULTIPLY(JJTMULTIPLY);
               boolean jjtc001 = true;
               jjtree.openNodeScope(jjtn001);
         try {
@@ -841,7 +882,7 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
         break;
       case SLASH:
         jj_consume_token(SLASH);
-              ASTdivide jjtn002 = new ASTdivide(JJTDIVIDE);
+              ASTDIVIDE jjtn002 = new ASTDIVIDE(JJTDIVIDE);
               boolean jjtc002 = true;
               jjtree.openNodeScope(jjtn002);
         try {
@@ -992,10 +1033,10 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
       jj_la1_init_1();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x5c400,0x5c400,0x5c400,0x5c400,0x5c400,0x0,0x0,0x0,0x5c400,0x5c400,0x5c400,0x5c400,0x800,0x4000000,0x3f00000,0x3f00000,0x60000000,0x60000000,0x80000000,0x80000000,0x0,};
+      jj_la1_0 = new int[] {0xbc400,0xbc400,0xbc400,0xbc400,0xbc400,0x0,0x0,0x0,0xbc400,0xbc400,0xbc400,0xbc400,0x800,0x8000000,0x7e00000,0x7e00000,0xc0000000,0xc0000000,0x0,0x0,0x0,};
    }
    private static void jj_la1_init_1() {
-      jj_la1_1 = new int[] {0x200200,0x200200,0x200,0x200,0x220,0x200,0x1a00,0x200,0x220,0x220,0x220,0x220,0x0,0x0,0x0,0x0,0x0,0x0,0x1,0x1,0x1a00,};
+      jj_la1_1 = new int[] {0x400400,0x400400,0x400,0x400,0x440,0x400,0x3400,0x400,0x440,0x440,0x440,0x440,0x0,0x0,0x0,0x0,0x0,0x0,0x3,0x3,0x3400,};
    }
 
   /** Constructor with InputStream. */
@@ -1136,7 +1177,7 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
   /** Generate ParseException. */
   static public ParseException generateParseException() {
     jj_expentries.clear();
-    boolean[] la1tokens = new boolean[54];
+    boolean[] la1tokens = new boolean[55];
     if (jj_kind >= 0) {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
@@ -1153,7 +1194,7 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
         }
       }
     }
-    for (int i = 0; i < 54; i++) {
+    for (int i = 0; i < 55; i++) {
       if (la1tokens[i]) {
         jj_expentry = new int[1];
         jj_expentry[0] = i;
