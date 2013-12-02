@@ -9,20 +9,21 @@
 .limit locals 10
 
 	ldc 1
-	ldc 1
-	iadd
-	ldc 1
-	iadd
 	putstatic test/i I
-	getstatic test/i I
-	ldc 1
-	iadd
+	ldc 2
 	putstatic test/j I
+	getstatic test/i I
+	getstatic test/j I
+	if_icmplt L000
+	getstatic java/lang/System/out Ljava/io/PrintStream;
+	getstatic test/i I
+	invokevirtual java/io/PrintStream/println(I)V
+	goto L001
+L000:
 	getstatic java/lang/System/out Ljava/io/PrintStream;
 	getstatic test/j I
-	ldc 1
-	iadd
 	invokevirtual java/io/PrintStream/println(I)V
+L001:
 	return
 
 .end method

@@ -23,6 +23,7 @@ public class CodeGenerator extends Backend
     protected static int varCount;
     protected static SymTabStack symTabStack;
     protected static PrintWriter objectFile;
+    protected static int labelCount = 0;
 
     public CodeGenerator() {}
     

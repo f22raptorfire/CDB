@@ -3,8 +3,6 @@ package wci.backend.compiler.generators;
 import wci.intermediate.*;
 import wci.intermediate.icodeimpl.*;
 import wci.backend.compiler.CodeGenerator;
-import static wci.intermediate.ICodeNodeType.*;
-import static wci.intermediate.icodeimpl.ICodeKeyImpl.*;
 
 /**
  * <h1>StatementExecutor</h1>
@@ -63,9 +61,39 @@ public class StatementCodeGenerator extends CodeGenerator
             	return variableGenerator.generate(node);
             }
             
+            case SUBTRACT: {
+            	SubtractCodeGenerator subtractGenerator = new SubtractCodeGenerator(this);
+            	return subtractGenerator.generate(node);
+            }
+            
             case ADD: {
             	AddCodeGenerator addGenerator = new AddCodeGenerator(this);
             	return addGenerator.generate(node);
+            }
+            
+            case MULTIPLY: {
+            	MultiplyCodeGenerator multiplyGenerator = new MultiplyCodeGenerator(this);
+            	return multiplyGenerator.generate(node);
+            }
+            
+            case DIVIDE: {
+            	DivideCodeGenerator divideGenerator = new DivideCodeGenerator(this);
+            	return divideGenerator.generate(node);
+            }
+            
+            case EE:
+            case NE:
+            case LT:
+            case LE:
+            case GT:
+            case GE: {
+            	RelationalCodeGenerator relationalGenerator = new RelationalCodeGenerator(this);
+            	return relationalGenerator.generate(node);
+            }
+            
+            case IF: {
+            	IfCodeGenerator ifGenerator = new IfCodeGenerator(this);
+            	return ifGenerator.generate(node);
             }
             /*
             case SELECT: {

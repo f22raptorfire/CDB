@@ -1,5 +1,8 @@
 @integer i;
 @integer j;
-i = 1 + 1 + 1;
-j = i + 1;
-PRINT j + 1;
+i = 1;
+j = 2;
+if (i < j)
+	PRINT j;
+else
+	PRINT i;

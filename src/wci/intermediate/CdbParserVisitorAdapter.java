@@ -64,30 +64,65 @@ public class CdbParserVisitorAdapter implements CdbParserVisitor
 
     public Object visit(ASTDIVIDE node, Object data)
     {
-        return node.childrenAccept(this, data);
+		node.setType(ICodeNodeTypeImpl.DIVIDE);
+		int childCount = node.jjtGetNumChildren();
+		for (int i = 0; i < childCount; i++) {
+			node.addChild((ICodeNode) node.jjtGetChild(i));
+		}
+		return node.childrenAccept(this, data);
     }
 
 	public Object visit(ASTEE node, Object data) {
+		node.setType(ICodeNodeTypeImpl.EE);
+		int childCount = node.jjtGetNumChildren();
+		for (int i = 0; i < childCount; i++) {
+			node.addChild((ICodeNode) node.jjtGetChild(i));
+		}
 		return node.childrenAccept(this, data);
 	}
 
 	public Object visit(ASTNE node, Object data) {
+		node.setType(ICodeNodeTypeImpl.NE);
+		int childCount = node.jjtGetNumChildren();
+		for (int i = 0; i < childCount; i++) {
+			node.addChild((ICodeNode) node.jjtGetChild(i));
+		}
 		return node.childrenAccept(this, data);
 	}
 
 	public Object visit(ASTLT node, Object data) {
+		node.setType(ICodeNodeTypeImpl.LT);
+		int childCount = node.jjtGetNumChildren();
+		for (int i = 0; i < childCount; i++) {
+			node.addChild((ICodeNode) node.jjtGetChild(i));
+		}
 		return node.childrenAccept(this, data);
 	}
 
 	public Object visit(ASTLE node, Object data) {
+		node.setType(ICodeNodeTypeImpl.LE);
+		int childCount = node.jjtGetNumChildren();
+		for (int i = 0; i < childCount; i++) {
+			node.addChild((ICodeNode) node.jjtGetChild(i));
+		}
 		return node.childrenAccept(this, data);
 	}
 
 	public Object visit(ASTGT node, Object data) {
+		node.setType(ICodeNodeTypeImpl.GT);
+		int childCount = node.jjtGetNumChildren();
+		for (int i = 0; i < childCount; i++) {
+			node.addChild((ICodeNode) node.jjtGetChild(i));
+		}
 		return node.childrenAccept(this, data);
 	}
 
 	public Object visit(ASTGE node, Object data) {
+		node.setType(ICodeNodeTypeImpl.GE);
+		int childCount = node.jjtGetNumChildren();
+		for (int i = 0; i < childCount; i++) {
+			node.addChild((ICodeNode) node.jjtGetChild(i));
+		}
 		return node.childrenAccept(this, data);
 	}
 
@@ -128,6 +163,11 @@ public class CdbParserVisitorAdapter implements CdbParserVisitor
 
 	@Override
 	public Object visit(ASTIF node, Object data) {
+		node.setType(ICodeNodeTypeImpl.IF);
+		int childCount = node.jjtGetNumChildren();
+		for (int i = 0; i < childCount; i++) {
+			node.addChild((ICodeNode) node.jjtGetChild(i));
+		}
 		return node.childrenAccept(this, data);
 	}
 
