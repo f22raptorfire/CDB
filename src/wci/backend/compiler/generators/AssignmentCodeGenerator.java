@@ -24,6 +24,7 @@ public class AssignmentCodeGenerator extends StatementCodeGenerator {
     public Object generate(ICodeNode node)
     {
     	ArrayList<ICodeNode> children = node.getChildren();
+    	StatementCodeGenerator cg = new StatementCodeGenerator(this);
     	
     	SymTabEntry programId = symTabStack.getProgramId();
     	String prefix = programId.getName() + "/", type;
@@ -31,14 +32,9 @@ public class AssignmentCodeGenerator extends StatementCodeGenerator {
     	SymTabEntry entry = symTabStack.lookup((String)children.get(0).getAttribute(ICodeKeyImpl.ID));
     	type = entry.getTypeSpec().getTypeId();
     	
-    	String value = "" + children.get(1).getAttribute(ICodeKeyImpl.VALUE);
+    	String value = "" + cg.generate(children.get(1));
     	
-    	String result = ";" + (String)children.get(0).getAttribute(ICodeKeyImpl.ID)
-    			+ " = " + children.get(1).getAttribute(ICodeKeyImpl.VALUE) + "\n";
-    	
-    	result += "\tldc " + value + "\n";
-    	
-    	result += "\tputstatic " + prefix + entry.getName() + " " + type + "\n";
+    	String result = value + "\tputstatic " + prefix + entry.getName() + " " + type + "\n";
     	
     	return result;
     }

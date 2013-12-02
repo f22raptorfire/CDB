@@ -63,6 +63,10 @@ public class StatementCodeGenerator extends CodeGenerator
             	return variableGenerator.generate(node);
             }
             
+            case ADD: {
+            	AddCodeGenerator addGenerator = new AddCodeGenerator(this);
+            	return addGenerator.generate(node);
+            }
             /*
             case SELECT: {
                 SelectExecutor selectExecutor = new SelectExecutor(this);

@@ -72,8 +72,8 @@ public class CdbParser
 
         // Compile the code.
         Backend cg = BackendFactory.createBackend("compile");
-        (new File("dummy.j")).createNewFile();
-        PrintWriter writer = new PrintWriter("dummy.j");
+        (new File("test.j")).createNewFile();
+        PrintWriter writer = new PrintWriter("test.j");
         cg.process(iCode, symTabStack, writer);
     }
 }
@@ -169,7 +169,7 @@ TOKEN: { /*	Error token */
 SimpleNode script() #COMPOUND : {SimpleNode rootNode;}
 {
   {
-    programId = symTabStack.enterLocal("Program");
+    programId = symTabStack.enterLocal("test");
     programId.setDefinition(DefinitionImpl.PROGRAM);
     programId.setAttribute(ROUTINE_SYMTAB, symTabStack.push());
     symTabStack.setProgramId(programId);

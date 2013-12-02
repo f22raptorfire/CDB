@@ -63,8 +63,8 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
 
         // Compile the code.
         Backend cg = BackendFactory.createBackend("compile");
-        (new File("dummy.j")).createNewFile();
-        PrintWriter writer = new PrintWriter("dummy.j");
+        (new File("test.j")).createNewFile();
+        PrintWriter writer = new PrintWriter("test.j");
         cg.process(iCode, symTabStack, writer);
     }
 
@@ -74,7 +74,7 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
                                  boolean jjtc000 = true;
                                  jjtree.openNodeScope(jjtn000);SimpleNode rootNode;
     try {
-    programId = symTabStack.enterLocal("Program");
+    programId = symTabStack.enterLocal("test");
     programId.setDefinition(DefinitionImpl.PROGRAM);
     programId.setAttribute(ROUTINE_SYMTAB, symTabStack.push());
     symTabStack.setProgramId(programId);
