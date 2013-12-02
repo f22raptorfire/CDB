@@ -1,8 +1,6 @@
 @integer i;
 @integer j;
-i = 1;
+i = 2;
 j = 2;
-if (i < j)
-	PRINT j;
-else
-	PRINT i;
+while (i == j)
+	j = 1;

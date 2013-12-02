@@ -17,7 +17,7 @@ public enum ICodeNodeTypeImpl implements ICodeNodeType
 
     // Statements
     COMPOUND, ASSIGN, LOOP, TEST, CALL, PARAMETERS, PRINT,
-    IF, SELECT, SELECT_BRANCH, SELECT_CONSTANTS, NO_OP,
+    IF, WHILE, SELECT, SELECT_BRANCH, SELECT_CONSTANTS, NO_OP,
 
     // Relational operators
     EE, NE, LT, LE, GT, GE, NOT,

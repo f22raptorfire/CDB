@@ -95,6 +95,11 @@ public class StatementCodeGenerator extends CodeGenerator
             	IfCodeGenerator ifGenerator = new IfCodeGenerator(this);
             	return ifGenerator.generate(node);
             }
+            
+            case WHILE: {
+            	WhileCodeGenerator whileGenerator = new WhileCodeGenerator(this);
+            	return whileGenerator.generate(node);
+            }
             /*
             case SELECT: {
                 SelectExecutor selectExecutor = new SelectExecutor(this);
