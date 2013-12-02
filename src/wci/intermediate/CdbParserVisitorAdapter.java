@@ -148,16 +148,31 @@ public class CdbParserVisitorAdapter implements CdbParserVisitor
 
 	@Override
 	public Object visit(ASTWHILE node, Object data) {
+		node.setType(ICodeNodeTypeImpl.WHILE);
+		int childCount = node.jjtGetNumChildren();
+		for (int i = 0; i < childCount; i++) {
+			node.addChild((ICodeNode) node.jjtGetChild(i));
+		}
 		return node.childrenAccept(this, data);
 	}
 
 	@Override
 	public Object visit(ASTFOR node, Object data) {
+		node.setType(ICodeNodeTypeImpl.FOR);
+		int childCount = node.jjtGetNumChildren();
+		for (int i = 0; i < childCount; i++) {
+			node.addChild((ICodeNode) node.jjtGetChild(i));
+		}
 		return node.childrenAccept(this, data);
 	}
 
 	@Override
 	public Object visit(ASTDO node, Object data) {
+		node.setType(ICodeNodeTypeImpl.DO);
+		int childCount = node.jjtGetNumChildren();
+		for (int i = 0; i < childCount; i++) {
+			node.addChild((ICodeNode) node.jjtGetChild(i));
+		}
 		return node.childrenAccept(this, data);
 	}
 

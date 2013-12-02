@@ -1,6 +1,15 @@
 @integer i;
 @integer j;
-i = 2;
-j = 2;
-while (i == j)
-	j = 1;
+j = 4;
+i = 0;
+do {
+	PRINT i;
+	i = i + 1;
+} while (j > i);
+
+/*
+  L001:
+  	stuff
+    test L001
+ */
+ 

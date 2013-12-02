@@ -100,14 +100,17 @@ public class StatementCodeGenerator extends CodeGenerator
             	WhileCodeGenerator whileGenerator = new WhileCodeGenerator(this);
             	return whileGenerator.generate(node);
             }
-            /*
-            case SELECT: {
-                SelectExecutor selectExecutor = new SelectExecutor(this);
-                return selectExecutor.execute(node);
+            
+            case FOR: {
+            	ForCodeGenerator forGenerator = new ForCodeGenerator(this);
+            	return forGenerator.generate(node);
             }
 
-            case NO_OP: return null;
-*/
+            case DO: {
+            	DoCodeGenerator doGenerator = new DoCodeGenerator(this);
+            	return doGenerator.generate(node);
+            }
+            
             default: {
                 return "";
             }

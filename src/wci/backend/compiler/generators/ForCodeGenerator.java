@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import wci.backend.compiler.CodeGenerator;
 import wci.intermediate.ICodeNode;
 
-public class WhileCodeGenerator extends StatementCodeGenerator {
+public class ForCodeGenerator extends StatementCodeGenerator {
 
-	public WhileCodeGenerator(CodeGenerator parent) {
+	public ForCodeGenerator(CodeGenerator parent) {
 		super(parent);
 	}
 
@@ -15,13 +15,15 @@ public class WhileCodeGenerator extends StatementCodeGenerator {
     {
 		ArrayList<ICodeNode> children = node.getChildren();
 		StatementCodeGenerator cg =  new StatementCodeGenerator(this);
+		String result = "" + cg.generate(children.get(0));
     	String labelTest = String.format("L%03d", labelCount++);
     	String labelTrue = String.format("L%03d", labelCount++);
     	String labelFalse = String.format("L%03d", labelCount++);
-    	String result = labelTest + ":\n";
-		result += cg.generate(children.get(0)) + labelTrue + "\n";
+    	result += labelTest + ":\n";
+		result += cg.generate(children.get(1)) + labelTrue + "\n";
 		result += "\tgoto " + labelFalse + "\n" + labelTrue + ":\n";
-		result += cg.generate(children.get(1));
+		result += cg.generate(children.get(3));
+		result += cg.generate(children.get(2));
 		result += "\tgoto " + labelTest + "\n";
     	result += labelFalse + ":\n";
     	return result;
