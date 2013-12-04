@@ -1,0 +1,397 @@
+options {
+    IGNORE_CASE=true;
+    JJTREE_OUTPUT_DIRECTORY="wci/frontend";
+    NODE_EXTENDS="wci.intermediate.icodeimpl.ICodeNodeImpl";
+    MULTI=true;
+    VISITOR=true;
+}
+
+PARSER_BEGIN(CdbParser)
+package wci.frontend;
+
+import java.util.ArrayList;
+import java.io.*;
+
+import wci.intermediate.*;
+import wci.intermediate.symtabimpl.*;
+import wci.backend.*;
+import wci.backend.compiler.*;
+import wci.util.*;
+
+import static wci.intermediate.symtabimpl.SymTabKeyImpl.*;
+import static wci.intermediate.symtabimpl.DefinitionImpl.*;
+import static wci.intermediate.symtabimpl.RoutineCodeImpl.*;
+import static wci.intermediate.symtabimpl.SymTabKeyImpl.*;
+import static wci.intermediate.icodeimpl.ICodeKeyImpl.*;
+
+public class CdbParser
+{
+    private static final String SOURCE_SUFFIX = ".cdb";
+    private static final String OUTPUT_SUFFIX = ".j";
+
+    private static SymTabStack symTabStack;
+    private static SymTabEntry programId;
+
+    public static void main(String[] args)
+        throws Exception
+    {
+    	// Create and initialize the symbol table stack.
+        symTabStack = SymTabFactory.createSymTabStack();
+        Predefined.initialize(symTabStack);
+
+        // Process the source file path which ends in .cdb
+        // and create the output file path which ends in .j
+        String sourceFilePath = args[0];
+        int truncatedLength = sourceFilePath.length() - SOURCE_SUFFIX.length();
+        int suffixIndex = sourceFilePath.lastIndexOf(SOURCE_SUFFIX);
+        String objectFilePath = (suffixIndex == truncatedLength)
+            ? sourceFilePath.substring(0, truncatedLength) + OUTPUT_SUFFIX
+            : sourceFilePath + OUTPUT_SUFFIX;
+
+        // Parse a CDB program.
+        Reader    reader = new FileReader(sourceFilePath);
+        CdbParser parser = new CdbParser(reader);
+        SimpleNode rootNode = parser.script();
+
+        // Print the cross-reference table.
+        CrossReferencer crossReferencer = new CrossReferencer();
+        crossReferencer.print(symTabStack);
+
+        // Visit the parse tree nodes to decorate them with type information.
+        TypeSetterVisitor typeVisitor = new TypeSetterVisitor();
+        rootNode.jjtAccept(typeVisitor, null);
+
+        // Create and initialize the ICode wrapper for the parse tree.
+        ICode iCode = ICodeFactory.createICode();
+        iCode.setRoot(rootNode);
+        programId.setAttribute(ROUTINE_ICODE, iCode);
+        
+        // Print the parse tree.
+        ParseTreePrinter treePrinter = new ParseTreePrinter(System.out);
+        treePrinter.print(symTabStack);
+
+        // Compile the code.
+        Backend cg = BackendFactory.createBackend("compile");
+        (new File("test.j")).createNewFile();
+        PrintWriter writer = new PrintWriter("test.j");
+        cg.process(iCode, symTabStack, writer);
+    }
+}
+PARSER_END(CdbParser)
+
+SKIP: {
+    " " | "\r" | "\t" | "\n" | "\r\n"
+}
+
+SKIP:
+{
+  <SINGLE_LINE_COMMENT : "//" (~["\n","\r"])* ("\r" | "\n" | "\r\n") >
+}
+
+//skip multi-line comments
+MORE : {
+  "/*" : IN_MULTI_LINE_COMMENT
+}
+
+<IN_MULTI_LINE_COMMENT>
+MORE : {
+  < ~[] >
+}
+
+<IN_MULTI_LINE_COMMENT>
+SPECIAL_TOKEN : {
+  <MULTI_LINE_COMMENT: "*/"> : DEFAULT
+}
+
+TOKEN: { /* Reserved words */
+    <IF        : "IF">
+  | <ELSE      : "ELSE">
+  | <TRUE      : "TRUE">
+  | <FALSE     : "FALSE">
+  | <WHILE     : "WHILE">
+  | <FOR       : "FOR">
+  | <DO        : "DO">
+  | <PRINT     : "PRINT">
+}
+
+TOKEN: /* Special symbols */
+{
+    <COLON        : ":">
+  | <AT           : "@">
+  | <EQUALS       : "=">
+  | <EE           : "==">
+  | <NE           : "!=">
+  | <LT           : "<">
+  | <LE           : "<=">
+  | <GT           : ">">
+  | <GE           : ">=">
+  | <COMMA        : ",">
+  | <DOT          : ".">
+  | <SEMICOLON    : ";">
+  | <PLUS         : "+">
+  | <MINUS        : "-">
+  | <STAR         : "*">
+  | <SLASH        : "/">
+  | <QUOTE        : "'">
+  | <DOUBLE_QUOTE : "\"">
+  | <LEFT_PAREN   : "(">
+  | <RIGHT_PAREN  : ")">
+  | <LEFT_BRACE   : "{">
+  | <RIGHT_BRACE  : "}">   
+  | <AND          : "&&">
+  | <OR           : "||">
+}
+
+TOKEN: { /* Identifiers, strings, and numbers */
+    <IDENTIFIER : <LETTER>(<LETTER>|<DIGIT>)*>
+  | <STRING_LIT : <DOUBLE_QUOTE>(~["\""])*<DOUBLE_QUOTE>>
+
+  | <INTEGER    : <UNSIGNED_NUMBER>>
+  | <REAL   : <WHOLE><FRACTION><EXPONENT>
+             | <WHOLE><FRACTION>
+             | <WHOLE><EXPONENT>>
+
+  | <#LETTER : ["a"-"z", "A"-"Z"]>
+  | <#DIGIT  : ["0"-"9"]>
+  | <#SIGN   : ["+", "-"]>
+
+  | <#UNSIGNED_NUMBER : (<DIGIT>)+>
+  | <#WHOLE           : <UNSIGNED_NUMBER>>
+  | <#FRACTION        : "." <UNSIGNED_NUMBER>>
+  | <#EXPONENT        : "E"(<SIGN>)?<UNSIGNED_NUMBER>>
+}
+
+TOKEN: { /*	Error token */
+    <EOL     : "\r" | "\n" | "\r\n">
+ |  <ERROR   : ~["\r", "\n"]>
+}
+
+SimpleNode script() #COMPOUND : {SimpleNode rootNode;}
+{
+  {
+    programId = symTabStack.enterLocal("test");
+    programId.setDefinition(DefinitionImpl.PROGRAM);
+    programId.setAttribute(ROUTINE_SYMTAB, symTabStack.push());
+    symTabStack.setProgramId(programId);
+  }
+  (
+    try {
+        statement()
+      | Error() {handleError(token);}
+    }
+    catch (ParseException ex) {
+      handleError(token);
+      System.out.println("Parse Exception");
+    }
+    catch (NullPointerException ex) {	  handleError(token);
+      System.out.println("Undefined Variable");
+    }
+  )+
+  <EOF>  { return jjtThis; }
+}
+
+void statement() #void : {}
+{
+  (
+       assignmentStatement()
+    |  declarationStatement()
+    |  printStatement()
+    |  ifStatement()
+    |  doLoop()
+    |  forLoop()
+    |  whileLoop()
+  )
+}
+
+SimpleNode compoundStatement() #COMPOUND : {}
+{
+    <LEFT_BRACE>
+    (statement())+
+    <RIGHT_BRACE>
+    { return jjtThis; }
+}
+
+void whileLoop() #WHILE : {}
+{
+  <WHILE> <LEFT_PAREN> expression() <RIGHT_PAREN>
+  (
+	  compoundStatement() 
+	| statement()
+  )
+}
+
+void forLoop() #FOR : {}
+{
+  <FOR>
+  <LEFT_PAREN>
+  (assignment())?
+  <SEMICOLON>
+  (expression())?
+  <SEMICOLON>
+  (assignment())?
+  <RIGHT_PAREN>
+  (
+	  compoundStatement()
+	| statement()
+  )
+}
+
+void doLoop() #DO : {}
+{
+	<DO>
+	(
+	  compoundStatement()
+	| statement()
+    )
+    <WHILE> <LEFT_PAREN> expression() <RIGHT_PAREN> <SEMICOLON>
+}
+
+void ifStatement() #IF : {}
+{
+	<IF> <LEFT_PAREN> expression() <RIGHT_PAREN>
+	(
+	  compoundStatement()
+	| statement()
+    )
+    ( LOOKAHEAD(1) <ELSE> (
+		  compoundStatement()
+		| statement()
+    ))?
+}
+
+void declarationStatement() #void : {ArrayList<SymTabEntry> variableList;
+	                                 int index = 0;}
+{	<AT> <IDENTIFIER> {
+			SymTabEntry typeId = symTabStack.lookup(token.image);
+            typeId.appendLineNumber(token.beginLine);
+            TypeSpec type = typeId.getTypeSpec();
+	  
+        }
+        <IDENTIFIER> {
+            variableList = new ArrayList<SymTabEntry>();
+            processVariableDecl(token, index++, variableList);
+        }
+        (
+            <COMMA>
+            <IDENTIFIER> {
+                processVariableDecl(token, index++, variableList);
+            }
+        )*
+        {
+       		for (SymTabEntry variableId : variableList) {
+           		variableId.setTypeSpec(type);
+            }
+        }
+    <SEMICOLON>
+}
+
+void printStatement() #PRINT : {}
+{	<PRINT> simpleExpression() <SEMICOLON>}
+
+void assignmentStatement() #void : {}
+{
+    assignment()
+    <SEMICOLON>
+}
+
+void assignment() #ASSIGN : {}
+{	variable() {
+        SymTabEntry variableId = symTabStack.lookup(token.image);
+        variableId.appendLineNumber(token.beginLine);
+    }
+    <EQUALS>
+    expression()
+}
+
+void expression() #void : {}
+{
+  simpleExpression() (
+		<EE> simpleExpression() #EE(2)
+      | <NE> simpleExpression() #NE(2)
+      | <LT> simpleExpression() #LT(2)
+      | <LE> simpleExpression() #LE(2)
+      | <GT> simpleExpression() #GT(2)
+      | <GE> simpleExpression() #GE(2)
+	)?  
+}
+
+void simpleExpression() #void : {}
+{
+  term() (
+        "+" term() #ADD(2)
+      | "-" term() #SUBTRACT(2)
+    )*     
+}
+
+void term() #void : {}
+{
+    factor() (
+        "*" factor() #MULTIPLY(2)
+      | "/" factor() #DIVIDE(2)
+    )*     
+}
+
+void factor() #void : {}
+{
+    variable()
+  | integerConstant()
+  | realConstant()
+  // ADD PAREN HERE MAYBE?
+}
+
+void variable() #VARIABLE : {}
+{
+    <IDENTIFIER> {
+        SymTabEntry variableId = symTabStack.lookup(token.image);
+        variableId.appendLineNumber(token.beginLine);
+        TypeSpec type = variableId.getTypeSpec();
+        jjtThis.setTypeSpec(type);
+        jjtThis.setAttribute(ID, token.image);
+    }
+}
+
+void integerConstant() #INTEGER_CONSTANT : {}
+{
+    <INTEGER> {
+        jjtThis.setTypeSpec(Predefined.integerType);
+        jjtThis.setAttribute(VALUE, Integer.parseInt(token.image));
+    }
+}
+
+void realConstant() #REAL_CONSTANT : {}
+{
+    <REAL> {
+        jjtThis.setTypeSpec(Predefined.realType);
+        jjtThis.setAttribute(VALUE, Float.parseFloat(token.image));
+    }
+}
+
+void Error() #void : {}
+{
+    <ERROR>
+}
+
+JAVACODE
+void processVariableDecl(Token token, int index,
+                         ArrayList<SymTabEntry> variableList) #void
+{
+    SymTabEntry variableId = symTabStack.enterLocal(token.image);
+    variableId.setIndex(index);
+    variableId.setDefinition(DefinitionImpl.VARIABLE);
+    variableId.appendLineNumber(token.beginLine);
+    variableList.add(variableId);
+}
+
+JAVACODE
+String handleError(Token token) #void
+{
+    System.out.println("*** ERROR: Line " + token.beginLine +
+                     " after \"" + token.image + "\"");
+
+    do {
+    	token = getNextToken();
+    } while (token.kind != SEMICOLON);
+
+	//jjtree.popNode();
+    return token.image;
+}

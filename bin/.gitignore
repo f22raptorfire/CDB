@@ -1,3 +1,10 @@
+/jasmin.jar
+/runtime
+/test.j
 /wci
 /CDB.class
-/runtime
+/Printer.class
+/Tester.class
+/cdb.jjt
+/src
+/.gitignore
