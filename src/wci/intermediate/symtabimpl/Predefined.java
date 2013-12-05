@@ -26,11 +26,13 @@ public class Predefined
     public static TypeSpec integerType;
     public static TypeSpec realType;
     public static TypeSpec booleanType;
+    public static TypeSpec stringType;
     public static TypeSpec charType;
     public static TypeSpec undefinedType;
 
     // Predefined identifiers.
     public static SymTabEntry integerId;
+    public static SymTabEntry stringId;
     public static SymTabEntry realId;
     public static SymTabEntry booleanId;
     public static SymTabEntry charId;
@@ -101,6 +103,15 @@ public class Predefined
         booleanType.setTypeId("Z");
         booleanId.setDefinition(DefinitionImpl.TYPE);
         booleanId.setTypeSpec(booleanType);
+        
+        // Type string.
+        stringId = symTabStack.enterLocal("string");
+        stringType = TypeFactory.createType(ENUMERATION);
+        stringType.setIdentifier(stringId);
+        stringType.setDataSize(40);
+        stringType.setTypeId("Ljava/lang/String;");
+        stringId.setDefinition(DefinitionImpl.TYPE);
+        stringId.setTypeSpec(stringType);
         
         // Type char.
         charId = symTabStack.enterLocal("char");

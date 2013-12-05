@@ -3,6 +3,7 @@ package wci.intermediate;
 import wci.frontend.ASTADD;
 import wci.frontend.ASTASSIGN;
 import wci.frontend.ASTCOMPOUND;
+import wci.frontend.ASTDATABASE;
 import wci.frontend.ASTDIVIDE;
 import wci.frontend.ASTDO;
 import wci.frontend.ASTEE;
@@ -16,13 +17,16 @@ import wci.frontend.ASTLT;
 import wci.frontend.ASTMULTIPLY;
 import wci.frontend.ASTNE;
 import wci.frontend.ASTPRINT;
+import wci.frontend.ASTPRINTLN;
+import wci.frontend.ASTPROMPT_ADD;
+import wci.frontend.ASTPROMPT_SHOW;
 import wci.frontend.ASTREAL_CONSTANT;
+import wci.frontend.ASTSTRING_CONSTANT;
 import wci.frontend.ASTSUBTRACT;
 import wci.frontend.ASTVARIABLE;
 import wci.frontend.ASTWHILE;
 import wci.frontend.CdbParserVisitor;
 import wci.frontend.SimpleNode;
-import wci.intermediate.icodeimpl.ICodeKeyImpl;
 import wci.intermediate.icodeimpl.ICodeNodeTypeImpl;
 
 public class CdbParserVisitorAdapter implements CdbParserVisitor
@@ -212,5 +216,51 @@ public class CdbParserVisitorAdapter implements CdbParserVisitor
 	public Object visit(ASTREAL_CONSTANT node, Object data) {
 		node.setType(ICodeNodeTypeImpl.REAL_CONSTANT);
 		return data;
+	}
+
+	@Override
+	public Object visit(ASTSTRING_CONSTANT node, Object data) {
+		node.setType(ICodeNodeTypeImpl.STRING_CONSTANT);
+		return null;
+	}
+
+	@Override
+	public Object visit(ASTPROMPT_SHOW node, Object data) {
+		node.setType(ICodeNodeTypeImpl.PROMPT_SHOW);
+		int childCount = node.jjtGetNumChildren();
+		for (int i = 0; i < childCount; i++) {
+			node.addChild((ICodeNode) node.jjtGetChild(i));
+		}
+		return node.childrenAccept(this, data);
+	}
+
+	@Override
+	public Object visit(ASTPROMPT_ADD node, Object data) {
+		node.setType(ICodeNodeTypeImpl.PROMPT_ADD);
+		int childCount = node.jjtGetNumChildren();
+		for (int i = 0; i < childCount; i++) {
+			node.addChild((ICodeNode) node.jjtGetChild(i));
+		}
+		return node.childrenAccept(this, data);
+	}
+
+	@Override
+	public Object visit(ASTDATABASE node, Object data) {
+		node.setType(ICodeNodeTypeImpl.DATABASE);
+		int childCount = node.jjtGetNumChildren();
+		for (int i = 0; i < childCount; i++) {
+			node.addChild((ICodeNode) node.jjtGetChild(i));
+		}
+		return node.childrenAccept(this, data);
+	}
+
+	@Override
+	public Object visit(ASTPRINTLN node, Object data) {
+		node.setType(ICodeNodeTypeImpl.PRINTLN);
+		int childCount = node.jjtGetNumChildren();
+		for (int i = 0; i < childCount; i++) {
+			node.addChild((ICodeNode) node.jjtGetChild(i));
+		}
+		return node.childrenAccept(this, data);
 	}
 }

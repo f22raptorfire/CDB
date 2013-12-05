@@ -44,6 +44,7 @@ public class CodeGenerator extends Backend
         throws Exception
     {
     	System.out.println("\n===== BACKEND CODE =====\n");
+    	
         this.symTabStack = symTabStack;
         this.iCode = iCode;
         this.objectFile = objectFile;
@@ -80,6 +81,8 @@ public class CodeGenerator extends Backend
     	SymTabEntry programId = symTabStack.getProgramId();
     	objectFile.append(".class public " + programId.getName() + "\n");
     	objectFile.append(".super java/lang/Object\n");
+    	objectFile.append("\n");
+    	objectFile.append(".field public static _database Lwci/runtime/CDBC;");
     	objectFile.append("\n");
     }
 }

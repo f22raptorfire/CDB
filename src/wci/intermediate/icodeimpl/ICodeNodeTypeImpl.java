@@ -13,10 +13,11 @@ import wci.intermediate.ICodeNodeType;
 public enum ICodeNodeTypeImpl implements ICodeNodeType
 {
     // Program structure
-    PROGRAM, PROCEDURE, FUNCTION,
+    PROGRAM, PROCEDURE, FUNCTION, DATABASE,
 
     // Statements
-    COMPOUND, ASSIGN, LOOP, TEST, CALL, PARAMETERS, PRINT,
+    COMPOUND, ASSIGN, LOOP, TEST, CALL, PARAMETERS, 
+    PRINT, PRINTLN, PROMPT_ADD, PROMPT_SHOW,
     IF, WHILE, FOR, DO, SELECT, SELECT_BRANCH, SELECT_CONSTANTS, NO_OP,
 
     // Relational operators
@@ -32,7 +33,7 @@ public enum ICodeNodeTypeImpl implements ICodeNodeType
     VARIABLE, SUBSCRIPTS, FIELD,
     INTEGER_CONSTANT, REAL_CONSTANT,
     STRING_CONSTANT, BOOLEAN_CONSTANT,
-
+    
     // WRITE parameter
     WRITE_PARM,
 }

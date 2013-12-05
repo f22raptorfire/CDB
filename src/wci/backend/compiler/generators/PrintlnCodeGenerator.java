@@ -7,9 +7,9 @@ import wci.intermediate.ICodeNode;
 import wci.intermediate.SymTabEntry;
 import wci.intermediate.icodeimpl.ICodeKeyImpl;
 
-public class PrintCodeGenerator extends StatementCodeGenerator {
+public class PrintlnCodeGenerator extends StatementCodeGenerator {
 
-	public PrintCodeGenerator(CodeGenerator parent) {
+	public PrintlnCodeGenerator(CodeGenerator parent) {
 		super(parent);
 	}
 
@@ -24,7 +24,7 @@ public class PrintCodeGenerator extends StatementCodeGenerator {
     	StatementCodeGenerator cg = new StatementCodeGenerator(this);
     	String result = "\tgetstatic java/lang/System/out Ljava/io/PrintStream;\n";
     	result += (String) cg.generate(node.getChildren().get(0));
-    	result += "\tinvokevirtual java/io/PrintStream/print(" + node.getChildren().get(0).getTypeSpec().getTypeId() + ")V\n";
+    	result += "\tinvokevirtual java/io/PrintStream/println(" + node.getChildren().get(0).getTypeSpec().getTypeId() + ")V\n";
     	return result;
     }
 }

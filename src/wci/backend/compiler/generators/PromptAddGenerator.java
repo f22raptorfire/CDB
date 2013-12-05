@@ -7,9 +7,9 @@ import wci.intermediate.ICodeNode;
 import wci.intermediate.SymTabEntry;
 import wci.intermediate.icodeimpl.ICodeKeyImpl;
 
-public class PrintCodeGenerator extends StatementCodeGenerator {
+public class PromptAddGenerator extends StatementCodeGenerator {
 
-	public PrintCodeGenerator(CodeGenerator parent) {
+	public PromptAddGenerator(CodeGenerator parent) {
 		super(parent);
 	}
 
@@ -21,10 +21,12 @@ public class PrintCodeGenerator extends StatementCodeGenerator {
      */
     public Object generate(ICodeNode node)
     {
+    	SymTabEntry programId = symTabStack.getProgramId();
     	StatementCodeGenerator cg = new StatementCodeGenerator(this);
-    	String result = "\tgetstatic java/lang/System/out Ljava/io/PrintStream;\n";
+    	String result = ""; 
+    	//result += "\tgetstatic " + programId.getName() + "/_database Lwci/runtime/CDBC;\n";
     	result += (String) cg.generate(node.getChildren().get(0));
-    	result += "\tinvokevirtual java/io/PrintStream/print(" + node.getChildren().get(0).getTypeSpec().getTypeId() + ")V\n";
+    	result += "\tinvokestatic wci.runtime/CDBC/addToCSV(Ljava/lang/String;)V\n";
     	return result;
     }
 }

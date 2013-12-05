@@ -50,12 +50,22 @@ public class StatementCodeGenerator extends CodeGenerator
                 PrintCodeGenerator printGenerator = new PrintCodeGenerator(this);
                 return printGenerator.generate(node);
             }
+            
+            case PRINTLN: {
+                PrintlnCodeGenerator printlnGenerator = new PrintlnCodeGenerator(this);
+                return printlnGenerator.generate(node);
+            }
 
             case INTEGER_CONSTANT: {
                 IntegerCodeGenerator integerGenerator = new IntegerCodeGenerator(this);
                 return integerGenerator.generate(node);
             }
 
+            case STRING_CONSTANT: {
+                StringCodeGenerator stringGenerator = new StringCodeGenerator(this);
+                return stringGenerator.generate(node);
+            }
+            
             case VARIABLE: {
             	VariableCodeGenerator variableGenerator = new VariableCodeGenerator(this);
             	return variableGenerator.generate(node);
@@ -109,6 +119,21 @@ public class StatementCodeGenerator extends CodeGenerator
             case DO: {
             	DoCodeGenerator doGenerator = new DoCodeGenerator(this);
             	return doGenerator.generate(node);
+            }
+            
+            case PROMPT_SHOW: {
+            	PromptShowGenerator promptShowGenerator = new PromptShowGenerator(this);
+            	return promptShowGenerator.generate(node);
+            }
+            
+            case PROMPT_ADD: {
+            	PromptAddGenerator promptAddGenerator = new PromptAddGenerator(this);
+            	return promptAddGenerator.generate(node);
+            }
+            
+            case DATABASE: {
+            	DatabaseGenerator databaseGenerator = new DatabaseGenerator(this);
+            	return databaseGenerator.generate(node);
             }
             
             default: {
