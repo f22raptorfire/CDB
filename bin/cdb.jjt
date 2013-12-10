@@ -17,6 +17,7 @@ import wci.intermediate.symtabimpl.*;
 import wci.backend.*;
 import wci.backend.compiler.*;
 import wci.util.*;
+import wci.intermediate.typeimpl.TypeFormImpl;
 
 import static wci.intermediate.symtabimpl.SymTabKeyImpl.*;
 import static wci.intermediate.symtabimpl.DefinitionImpl.*;
@@ -48,10 +49,13 @@ public class CdbParser
             ? sourceFilePath.substring(0, truncatedLength) + OUTPUT_SUFFIX
             : sourceFilePath + OUTPUT_SUFFIX;
 
+		int fileindex = sourceFilePath.lastIndexOf("\\") + 1;
+		String programName = sourceFilePath.substring(fileindex, truncatedLength);
+
         // Parse a CDB program.
         Reader    reader = new FileReader(sourceFilePath);
         CdbParser parser = new CdbParser(reader);
-        SimpleNode rootNode = parser.script();
+        SimpleNode rootNode = parser.script(programName);
 
         // Print the cross-reference table.
         CrossReferencer crossReferencer = new CrossReferencer();
@@ -60,6 +64,13 @@ public class CdbParser
         // Visit the parse tree nodes to decorate them with type information.
         TypeSetterVisitor typeVisitor = new TypeSetterVisitor();
         rootNode.jjtAccept(typeVisitor, null);
+        
+		ArrayList<SymTabEntry> entries = ((SymTab)programId.getAttribute(SymTabKeyImpl.ROUTINE_SYMTAB)).sortedEntries();
+    	for (SymTabEntry entry : entries) {
+    		if (entry.getDefinition() == DefinitionImpl.PROCEDURE) {
+				((SimpleNode)entry.getAttribute(ROUTINE_CODE)).jjtAccept(typeVisitor, null);
+    		}
+    	}
 
         // Create and initialize the ICode wrapper for the parse tree.
         ICode iCode = ICodeFactory.createICode();
@@ -72,8 +83,8 @@ public class CdbParser
 
         // Compile the code.
         Backend cg = BackendFactory.createBackend("compile");
-        (new File("src/test.j")).createNewFile();
-        PrintWriter writer = new PrintWriter("src/test.j");
+        (new File("src/" + programName + ".j")).createNewFile();
+        PrintWriter writer = new PrintWriter("src/" + programName + ".j");
         cg.process(iCode, symTabStack, writer);
     }
 }
@@ -117,12 +128,14 @@ TOKEN: { /* Reserved words */
   | <PROMPT    : "PROMPT">
   | <SHOW      : "SHOW">
   | <ADD       : "ADD">
+  | <NEW       : "NEW">
 }
 
 TOKEN: /* Special symbols */
 {
     <COLON        : ":">
   | <AT           : "@">
+  | <DOLLAR 	  : "$">
   | <EQUALS       : "=">
   | <EE           : "==">
   | <NE           : "!=">
@@ -139,6 +152,8 @@ TOKEN: /* Special symbols */
   | <SLASH        : "/">
   | <QUOTE        : "'">
   | <DOUBLE_QUOTE : "\"">
+  | <LEFT_BRACKET : "[">
+  | <RIGHT_BRACKET: "]">
   | <LEFT_PAREN   : "(">
   | <RIGHT_PAREN  : ")">
   | <LEFT_BRACE   : "{">
@@ -172,10 +187,10 @@ TOKEN: { /*	Error token */
  |  <ERROR   : ~["\r", "\n"]>
 }
 
-SimpleNode script() #COMPOUND : {SimpleNode rootNode;}
+SimpleNode script(String programName) #COMPOUND : { SimpleNode rootNode; }
 {
   {
-    programId = symTabStack.enterLocal("test");
+    programId = symTabStack.enterLocal(programName);
     programId.setDefinition(DefinitionImpl.PROGRAM);
     programId.setAttribute(ROUTINE_SYMTAB, symTabStack.push());
     symTabStack.setProgramId(programId);
@@ -188,7 +203,8 @@ SimpleNode script() #COMPOUND : {SimpleNode rootNode;}
     }
     catch (ParseException ex) {
       handleError(token);
-      System.out.println("Parse Exception");
+      System.out.println("Parse Exception\n");
+      ex.printStackTrace();
     }
     catch (NullPointerException ex) {	  handleError(token);
       System.out.println("Undefined Variable");
@@ -198,14 +214,16 @@ SimpleNode script() #COMPOUND : {SimpleNode rootNode;}
 }
 
 SimpleNode databaseStatement() #DATABASE : {}
-{	<DATABASE> stringConstant()
+{	<DATABASE> stringConstant() <SEMICOLON>
 	{ return jjtThis; }
 }
 
 void statement() #void : {}
 {
-  (
+  
+  ( LOOKAHEAD(2)
        assignmentStatement()
+    |  routineCall()
     |  declarationStatement()
     |  printStatement()
     |  printlnStatement()
@@ -225,7 +243,7 @@ void promptStatement() #void : {}{	<PROMPT> (
 SimpleNode compoundStatement() #COMPOUND : {}
 {
     <LEFT_BRACE>
-    (statement())+
+    (statement())*
     <RIGHT_BRACE>
     { return jjtThis; }
 }
@@ -280,8 +298,8 @@ void ifStatement() #IF : {}
 
 void declarationStatement() #void : {ArrayList<SymTabEntry> variableList;
 	                                 int index = 0;}
-{	<AT> <IDENTIFIER> {
-			SymTabEntry typeId = symTabStack.lookup(token.image);
+{	<DOLLAR> <IDENTIFIER> {
+			SymTabEntry typeId = symTabStack.lookup(token.image.toLowerCase());
             typeId.appendLineNumber(token.beginLine);
             TypeSpec type = typeId.getTypeSpec();
 	  
@@ -305,10 +323,10 @@ void declarationStatement() #void : {ArrayList<SymTabEntry> variableList;
 }
 
 void printStatement() #PRINT : {}
-{	  <PRINT> (simpleExpression()| stringConstant()) <SEMICOLON>}
+{	  <PRINT> simpleExpression() <SEMICOLON>}
 void printlnStatement() #PRINTLN : {}
 {
-	  <PRINTLN> (simpleExpression()| stringConstant()) <SEMICOLON>
+	  <PRINTLN> simpleExpression() <SEMICOLON>
 }
 
 void assignmentStatement() #void : {}
@@ -319,14 +337,79 @@ void assignmentStatement() #void : {}
 
 void assignment() #ASSIGN : {}
 {	variable() {
-        SymTabEntry variableId = symTabStack.lookup(token.image);
-        variableId.appendLineNumber(token.beginLine);
+        SymTabEntry entry = symTabStack.lookup(token.image);
+        entry.appendLineNumber(token.beginLine);
+        TypeSpec type = entry.getTypeSpec();
+		if (type.getForm() == TypeFormImpl.PROCEDURE)
+        {
+    		entry.setDefinition(DefinitionImpl.PROCEDURE);
+    		entry.setAttribute(ROUTINE_SYMTAB, symTabStack.push());
+ 		}
     }
     <EQUALS> (
     	expression()
-      | stringConstant()
+      | routine(entry) {jjtree.popNode();}
     )
 }
+void routineCall() #CALL : {}
+{	variable() {
+	  	SymTabEntry entry = symTabStack.lookup(token.image);
+        entry.appendLineNumber(token.beginLine);
+        TypeSpec type = entry.getTypeSpec();
+		if (type.getForm() != TypeFormImpl.PROCEDURE)
+        {
+			//error
+ 		}
+	}
+	routineParameters()
+}
+
+void routine(SymTabEntry entry) #void : {SimpleNode rootNode;}
+{
+  <NEW> (parameterList(entry))? rootNode = compoundStatement()  {
+    ICode iCode = ICodeFactory.createICode();
+    iCode.setRoot(rootNode);
+    entry.setAttribute(ROUTINE_CODE, rootNode);	entry.setAttribute(ROUTINE_ICODE, iCode);
+	entry.setDefinition(DefinitionImpl.PROCEDURE);
+  }
+}
+
+void routineParameters() #PARAMETERS : {}
+{
+  <LEFT_PAREN> (
+		  expression()
+		(
+		  <COMMA> expression()
+		)*
+	)? <RIGHT_PAREN> <SEMICOLON>
+}
+
+void parameterList(SymTabEntry entry) #void : {
+						 ArrayList<SymTabEntry> variableList;
+                         int index = 0;
+                         TypeSpec type;
+                         SymTabEntry typeId;}{
+	 {
+	    variableList = new ArrayList<SymTabEntry>();
+	 }    <LEFT_PAREN> (
+	<DOLLAR> <IDENTIFIER>		{
+		  	typeId = symTabStack.lookup(token.image.toLowerCase());
+            typeId.appendLineNumber(token.beginLine);
+            type = typeId.getTypeSpec();
+		}
+	(	  <IDENTIFIER>		{
+            processVariableDecl(token, index++, variableList);
+       		variableList.get(index - 1).setTypeSpec(type);
+		}
+	)*
+	(
+	   <COMMA>
+	|  <RIGHT_PAREN> {
+	    entry.setAttribute(ROUTINE_PARMS, variableList);
+	    entry.setAttribute(ROUTINE_LOCALS_COUNT, variableList.size());
+	    return;}
+ 	)
+  )*}
 
 void expression() #void : {}
 {
@@ -361,6 +444,7 @@ void factor() #void : {}
     variable()
   | integerConstant()
   | realConstant()
+  | stringConstant()
   // ADD PAREN HERE MAYBE?
 }
 

@@ -1,10 +1,13 @@
 package wci.intermediate.symtabimpl;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.Reader;
 import java.util.ArrayList;
 
 import wci.intermediate.*;
 import wci.intermediate.symtabimpl.*;
-
+import wci.intermediate.typeimpl.TypeFormImpl;
 import static wci.intermediate.symtabimpl.DefinitionImpl.*;
 import static wci.intermediate.symtabimpl.SymTabKeyImpl.*;
 import static wci.intermediate.symtabimpl.RoutineCodeImpl.*;
@@ -27,6 +30,7 @@ public class Predefined
     public static TypeSpec realType;
     public static TypeSpec booleanType;
     public static TypeSpec stringType;
+    public static TypeSpec procType;
     public static TypeSpec charType;
     public static TypeSpec undefinedType;
 
@@ -34,6 +38,7 @@ public class Predefined
     public static SymTabEntry integerId;
     public static SymTabEntry stringId;
     public static SymTabEntry realId;
+    public static SymTabEntry procId;
     public static SymTabEntry booleanId;
     public static SymTabEntry charId;
     public static SymTabEntry falseId;
@@ -120,6 +125,13 @@ public class Predefined
         charId.setDefinition(DefinitionImpl.TYPE);
         charId.setTypeSpec(charType);
 
+        // Type proc.
+        procId = symTabStack.enterLocal("proc");
+        procType = TypeFactory.createType(TypeFormImpl.PROCEDURE);
+        procType.setIdentifier(procId);
+        procId.setDefinition(DefinitionImpl.PROCEDURE);
+        procId.setTypeSpec(procType);
+        
         // Undefined type.
         undefinedType = TypeFactory.createType(SCALAR);
     }
@@ -155,10 +167,10 @@ public class Predefined
      */
     private static void initializeStandardRoutines(SymTabStack symTabStack)
     {
-        readId    = enterStandard(symTabStack, PROCEDURE, "read",    READ);
-        readlnId  = enterStandard(symTabStack, PROCEDURE, "readln",  READLN);
-        writeId   = enterStandard(symTabStack, PROCEDURE, "write",   WRITE);
-        writelnId = enterStandard(symTabStack, PROCEDURE, "writeln", WRITELN);
+        readId    = enterStandard(symTabStack, DefinitionImpl.PROCEDURE, "read",    READ);
+        readlnId  = enterStandard(symTabStack, DefinitionImpl.PROCEDURE, "readln",  READLN);
+        writeId   = enterStandard(symTabStack, DefinitionImpl.PROCEDURE, "write",   WRITE);
+        writelnId = enterStandard(symTabStack, DefinitionImpl.PROCEDURE, "writeln", WRITELN);
 
         absId    = enterStandard(symTabStack, FUNCTION, "abs",    ABS);
         arctanId = enterStandard(symTabStack, FUNCTION, "arctan", ARCTAN);

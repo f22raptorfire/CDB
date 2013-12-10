@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 import wci.intermediate.*;
 import wci.intermediate.symtabimpl.DefinitionImpl;
+import wci.intermediate.symtabimpl.SymTabImpl;
 import wci.intermediate.typeimpl.TypeFormImpl;
-
 import static wci.intermediate.symtabimpl.SymTabKeyImpl.*;
 import static wci.intermediate.symtabimpl.DefinitionImpl.*;
 import static wci.intermediate.typeimpl.TypeFormImpl.*;
@@ -46,6 +46,13 @@ public class CrossReferencer
 
         SymTabEntry programId = symTabStack.getProgramId();
         printRoutine(programId);
+        
+        ArrayList<SymTabEntry> entries = ((SymTabImpl) programId.getAttribute(ROUTINE_SYMTAB)).sortedEntries();
+        
+        for (SymTabEntry entry : entries) {
+        	if (entry.getDefinition() == DefinitionImpl.PROCEDURE)
+        		printRoutine(entry);
+        }
     }
 
     /**
@@ -133,7 +140,7 @@ public class CrossReferencer
         // Print the type specification.
         TypeSpec type = entry.getTypeSpec();
         printType(type);
-
+        
         switch ((DefinitionImpl) definition) {
 
             case CONSTANT: {
@@ -173,6 +180,17 @@ public class CrossReferencer
                 }
 
                 break;
+            }
+            
+            case PROCEDURE: {
+        		ArrayList<SymTabEntry> list = (ArrayList<SymTabEntry>) entry.getAttribute(ROUTINE_PARMS);
+    			System.out.println(INDENT + "--PARAMETERS--");
+            	// Print the parms and parms count
+            	if (list != null) {
+            		for (SymTabEntry entry1 : list) {
+                        System.out.println(INDENT + "Type id = " + entry1.getTypeSpec().getIdentifier().getName() + ", Name = " + entry1.getName());
+            		}
+            	}
             }
         }
     }

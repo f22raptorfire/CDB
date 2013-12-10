@@ -1,4 +1,4 @@
-EmployeeID,Name
-first,entry
-second,entry
-interesting,lajsfek
+EmployeeID,Name,Color
+1,Jason,White
+2,Adrian,Blue
+0,Nobody,Black

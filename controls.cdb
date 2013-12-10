@@ -4,28 +4,35 @@ DATABASE "C:\Users\Jason\Documents\GitHub\CDB"
 @string s;
 i = 1;
 j = 4;
-
 s = "DEMO!";
 
+PRINT "i = ";
 PRINTLN i;
+PRINT "j = ";
 PRINTLN j; 
+PRINT "i + j = ";
 PRINTLN i + j;
+PRINT "s = ";
 PRINTLN s;
 
+PRINTLN "i < j?";
 if (i < j)
-	PRINTLN "All's well";
+	PRINTLN "Yep!";
 else
-	PRINTLN "Game over";
+	PRINTLN "Stuff Broke";
 
+PRINTLN "For Loop: From 1 to 3";
 for (i = 1; i < 4; i = i + 1) {
 	PRINTLN i;
 }
 
+PRINTLN "While Loop: From 4 to 1";
 while (i > 0) {
 	PRINTLN i;
 	i = i - 1;
 }
 
+PRINTLN "Do loop: From 0 to 3";
 do {
 	PRINTLN i;
 	i = i + 1;

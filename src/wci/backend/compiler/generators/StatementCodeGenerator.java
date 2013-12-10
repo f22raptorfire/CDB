@@ -32,7 +32,7 @@ public class StatementCodeGenerator extends CodeGenerator
     public Object generate(ICodeNode node)
     {
         ICodeNodeTypeImpl nodeType = (ICodeNodeTypeImpl) node.getType();
-        System.out.println(node);
+        System.out.println(node + " " + nodeType);
         switch (nodeType) {
 
 	        case ASSIGN: {
@@ -134,6 +134,11 @@ public class StatementCodeGenerator extends CodeGenerator
             case DATABASE: {
             	DatabaseGenerator databaseGenerator = new DatabaseGenerator(this);
             	return databaseGenerator.generate(node);
+            }
+            
+            case CALL: {
+            	CallGenerator callGenerator = new CallGenerator(this);
+            	return callGenerator.generate(node);
             }
             
             default: {

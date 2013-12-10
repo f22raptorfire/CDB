@@ -2,6 +2,7 @@ package wci.intermediate;
 
 import wci.frontend.ASTADD;
 import wci.frontend.ASTASSIGN;
+import wci.frontend.ASTCALL;
 import wci.frontend.ASTCOMPOUND;
 import wci.frontend.ASTDATABASE;
 import wci.frontend.ASTDIVIDE;
@@ -16,6 +17,7 @@ import wci.frontend.ASTLE;
 import wci.frontend.ASTLT;
 import wci.frontend.ASTMULTIPLY;
 import wci.frontend.ASTNE;
+import wci.frontend.ASTPARAMETERS;
 import wci.frontend.ASTPRINT;
 import wci.frontend.ASTPRINTLN;
 import wci.frontend.ASTPROMPT_ADD;
@@ -257,6 +259,26 @@ public class CdbParserVisitorAdapter implements CdbParserVisitor
 	@Override
 	public Object visit(ASTPRINTLN node, Object data) {
 		node.setType(ICodeNodeTypeImpl.PRINTLN);
+		int childCount = node.jjtGetNumChildren();
+		for (int i = 0; i < childCount; i++) {
+			node.addChild((ICodeNode) node.jjtGetChild(i));
+		}
+		return node.childrenAccept(this, data);
+	}
+
+	@Override
+	public Object visit(ASTCALL node, Object data) {
+		node.setType(ICodeNodeTypeImpl.CALL);
+		int childCount = node.jjtGetNumChildren();
+		for (int i = 0; i < childCount; i++) {
+			node.addChild((ICodeNode) node.jjtGetChild(i));
+		}
+		return node.childrenAccept(this, data);
+	}
+
+	@Override
+	public Object visit(ASTPARAMETERS node, Object data) {
+		node.setType(ICodeNodeTypeImpl.PARAMETERS);
 		int childCount = node.jjtGetNumChildren();
 		for (int i = 0; i < childCount; i++) {
 			node.addChild((ICodeNode) node.jjtGetChild(i));

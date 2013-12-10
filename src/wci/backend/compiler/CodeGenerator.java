@@ -1,10 +1,13 @@
 package wci.backend.compiler;
 
+import static wci.intermediate.symtabimpl.DefinitionImpl.*;
+import static wci.intermediate.symtabimpl.SymTabKeyImpl.*;
+
 import java.io.*;
 import java.util.ArrayList;
 
 import wci.intermediate.*;
-import wci.intermediate.symtabimpl.DefinitionImpl;
+import wci.intermediate.icodeimpl.ICodeImpl;
 import wci.intermediate.symtabimpl.SymTabKeyImpl;
 import wci.backend.*;
 import wci.backend.compiler.generators.StatementCodeGenerator;
@@ -57,13 +60,45 @@ public class CodeGenerator extends Backend
     	ArrayList<SymTabEntry> entries = program.sortedEntries();
     	String type;
     	for (SymTabEntry entry : entries) {
-    		if (entry.getDefinition() == DefinitionImpl.VARIABLE) {
+    		if (entry.getDefinition() == VARIABLE) {
     			type = entry.getTypeSpec().getTypeId();
     			objectFile.append(".field public static " + entry.getName() + " " + type + "\n");
     		}
     	}
+
+    	objectFile.append("\n");
+    	objectFile.append(".method public <init>()V\n");
+		objectFile.append(".limit stack 1\n\n");
+		objectFile.append("\taload_0\n");
+		objectFile.append("\tinvokenonvirtual java/lang/Object/<init>()V\n");
+		objectFile.append("\treturn\n");
+    	objectFile.append("\n");
+		objectFile.append(".end method\n");
     	objectFile.append("\n");
 
+        for (SymTabEntry entry : entries) {
+        	if (entry.getDefinition() == PROCEDURE) {
+        		objectFile.append(".method static " + entry.getName() + "(");
+        		ArrayList<SymTabEntry> parameters = (ArrayList<SymTabEntry>) entry.getAttribute(ROUTINE_PARMS);
+        		if (parameters != null) {
+	        		for (SymTabEntry parameter : parameters) {
+	        			objectFile.append(parameter.getTypeSpec().getTypeId());
+	        		}
+        		}
+        		objectFile.append(")V\n");
+        		objectFile.append(".limit stack 16\n\n");
+            	objectFile.append(".limit locals 10\n\n");
+
+            	StatementCodeGenerator gen = new StatementCodeGenerator(this);
+        		objectFile.append(gen.generate((ICodeNode)((ICodeImpl)entry.getAttribute(ROUTINE_ICODE)).getRoot()).toString());
+        		
+        		objectFile.append("\treturn\n");
+            	objectFile.append("\n");
+        		objectFile.append(".end method\n");
+            	objectFile.append("\n");
+        	}
+        }
+    	
     	objectFile.append(".method public static main([Ljava/lang/String;)V\n");
     	objectFile.append(".limit stack  " + STACK_LIMIT + "\n");
     	objectFile.append(".limit locals 10\n\n");
@@ -82,7 +117,6 @@ public class CodeGenerator extends Backend
     	objectFile.append(".class public " + programId.getName() + "\n");
     	objectFile.append(".super java/lang/Object\n");
     	objectFile.append("\n");
-    	objectFile.append(".field public static _database Lwci/runtime/CDBC;");
-    	objectFile.append("\n");
+    	objectFile.append(".field public static _database Lwci/runtime/CDBC;\n");
     }
 }

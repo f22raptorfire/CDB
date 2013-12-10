@@ -41,81 +41,89 @@ public interface CdbParserConstants {
   /** RegularExpression Id. */
   int ADD = 22;
   /** RegularExpression Id. */
-  int COLON = 23;
+  int NEW = 23;
   /** RegularExpression Id. */
-  int AT = 24;
+  int COLON = 24;
   /** RegularExpression Id. */
-  int EQUALS = 25;
+  int AT = 25;
   /** RegularExpression Id. */
-  int EE = 26;
+  int DOLLAR = 26;
   /** RegularExpression Id. */
-  int NE = 27;
+  int EQUALS = 27;
   /** RegularExpression Id. */
-  int LT = 28;
+  int EE = 28;
   /** RegularExpression Id. */
-  int LE = 29;
+  int NE = 29;
   /** RegularExpression Id. */
-  int GT = 30;
+  int LT = 30;
   /** RegularExpression Id. */
-  int GE = 31;
+  int LE = 31;
   /** RegularExpression Id. */
-  int COMMA = 32;
+  int GT = 32;
   /** RegularExpression Id. */
-  int DOT = 33;
+  int GE = 33;
   /** RegularExpression Id. */
-  int SEMICOLON = 34;
+  int COMMA = 34;
   /** RegularExpression Id. */
-  int PLUS = 35;
+  int DOT = 35;
   /** RegularExpression Id. */
-  int MINUS = 36;
+  int SEMICOLON = 36;
   /** RegularExpression Id. */
-  int STAR = 37;
+  int PLUS = 37;
   /** RegularExpression Id. */
-  int SLASH = 38;
+  int MINUS = 38;
   /** RegularExpression Id. */
-  int QUOTE = 39;
+  int STAR = 39;
   /** RegularExpression Id. */
-  int DOUBLE_QUOTE = 40;
+  int SLASH = 40;
   /** RegularExpression Id. */
-  int LEFT_PAREN = 41;
+  int QUOTE = 41;
   /** RegularExpression Id. */
-  int RIGHT_PAREN = 42;
+  int DOUBLE_QUOTE = 42;
   /** RegularExpression Id. */
-  int LEFT_BRACE = 43;
+  int LEFT_BRACKET = 43;
   /** RegularExpression Id. */
-  int RIGHT_BRACE = 44;
+  int RIGHT_BRACKET = 44;
   /** RegularExpression Id. */
-  int AND = 45;
+  int LEFT_PAREN = 45;
   /** RegularExpression Id. */
-  int OR = 46;
+  int RIGHT_PAREN = 46;
   /** RegularExpression Id. */
-  int UNDERSCORE = 47;
+  int LEFT_BRACE = 47;
   /** RegularExpression Id. */
-  int IDENTIFIER = 48;
+  int RIGHT_BRACE = 48;
   /** RegularExpression Id. */
-  int STRING_LIT = 49;
+  int AND = 49;
   /** RegularExpression Id. */
-  int INTEGER = 50;
+  int OR = 50;
   /** RegularExpression Id. */
-  int REAL = 51;
+  int UNDERSCORE = 51;
   /** RegularExpression Id. */
-  int LETTER = 52;
+  int IDENTIFIER = 52;
   /** RegularExpression Id. */
-  int DIGIT = 53;
+  int STRING_LIT = 53;
   /** RegularExpression Id. */
-  int SIGN = 54;
+  int INTEGER = 54;
   /** RegularExpression Id. */
-  int UNSIGNED_NUMBER = 55;
+  int REAL = 55;
   /** RegularExpression Id. */
-  int WHOLE = 56;
+  int LETTER = 56;
   /** RegularExpression Id. */
-  int FRACTION = 57;
+  int DIGIT = 57;
   /** RegularExpression Id. */
-  int EXPONENT = 58;
+  int SIGN = 58;
   /** RegularExpression Id. */
-  int EOL = 59;
+  int UNSIGNED_NUMBER = 59;
   /** RegularExpression Id. */
-  int ERROR = 60;
+  int WHOLE = 60;
+  /** RegularExpression Id. */
+  int FRACTION = 61;
+  /** RegularExpression Id. */
+  int EXPONENT = 62;
+  /** RegularExpression Id. */
+  int EOL = 63;
+  /** RegularExpression Id. */
+  int ERROR = 64;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -147,8 +155,10 @@ public interface CdbParserConstants {
     "\"PROMPT\"",
     "\"SHOW\"",
     "\"ADD\"",
+    "\"NEW\"",
     "\":\"",
     "\"@\"",
+    "\"$\"",
     "\"=\"",
     "\"==\"",
     "\"!=\"",
@@ -165,6 +175,8 @@ public interface CdbParserConstants {
     "\"/\"",
     "\"\\\'\"",
     "\"\\\"\"",
+    "\"[\"",
+    "\"]\"",
     "\"(\"",
     "\")\"",
     "\"{\"",

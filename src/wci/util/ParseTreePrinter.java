@@ -8,7 +8,9 @@ import java.io.PrintStream;
 
 import wci.frontend.*;
 import wci.intermediate.*;
-
+import wci.intermediate.symtabimpl.SymTabEntryImpl;
+import wci.intermediate.symtabimpl.SymTabImpl;
+import wci.intermediate.symtabimpl.SymTabStackImpl;
 import static wci.intermediate.symtabimpl.SymTabKeyImpl.*;
 import static wci.intermediate.symtabimpl.DefinitionImpl.*;
 
@@ -59,6 +61,13 @@ public class ParseTreePrinter
 
         SymTabEntry programId = symTabStack.getProgramId();
         printRoutine(programId);
+        
+        ArrayList<SymTabEntry> entries = ((SymTabImpl) programId.getAttribute(ROUTINE_SYMTAB)).sortedEntries();
+        
+        for (SymTabEntry entry : entries) {
+        	if (entry.getDefinition() == PROCEDURE)
+        		printRoutine(entry);
+        }
     }
 
     /**

@@ -1,0 +1,14 @@
+DATABASE "";
+
+$INTEGER i, j;
+i = 1;
+j = 3;
+$proc p;
+p = new ($integer x, $String y) {
+	PRINTLN i;
+	PRINTLN x;
+	PRINTLN j;
+	PRINTLN y;
+};
+
+p(i + 1, "4");
