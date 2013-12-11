@@ -1,14 +1,12 @@
 DATABASE "";
 
-$real i;
+$integer i;
+i = 5 + "yes";
 $proc editReal;
-editReal = new (@real r) {
-	$real i, j;
-	i = 2.3;
-	j = 3;
-	r = 4.5 / i + j;
+editReal = new ($integer i) {
+	PRINTLN i;
+	i = i - 1;
+	if (i > 0)
+		editReal(i);
 };
-
-i = 1.2;
-editReal(@i);
-PRINTLN i;
+editReal(i);

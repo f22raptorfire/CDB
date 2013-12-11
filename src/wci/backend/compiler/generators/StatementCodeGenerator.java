@@ -75,6 +75,11 @@ public class StatementCodeGenerator extends CodeGenerator
             	return variableGenerator.generate(node);
             }
             
+            case NEGATE: {
+            	NegateCodeGenerator negateGenerator = new NegateCodeGenerator(this);
+            	return negateGenerator.generate(node);
+            }
+            
             case SUBTRACT: {
             	SubtractCodeGenerator subtractGenerator = new SubtractCodeGenerator(this);
             	return subtractGenerator.generate(node);

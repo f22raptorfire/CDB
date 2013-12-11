@@ -443,18 +443,21 @@ void expression() #void : {}
 
 void simpleExpression() #void : {}
 {
-  term() (
+  (      term()
+    | "-" term() #NEGATE(1)
+  )
+    (
         "+" term() #ADD(2)
       | "-" term() #SUBTRACT(2)
     )*     
 }
-
+// i = 2 * -3
 void term() #void : {}
 {
     factor() (
         "*" factor() #MULTIPLY(2)
       | "/" factor() #DIVIDE(2)
-    )*     
+    )*
 }
 
 void factor() #void : {}
@@ -463,7 +466,7 @@ void factor() #void : {}
   | integerConstant()
   | realConstant()
   | stringConstant()
-  // ADD PAREN HERE MAYBE?
+  | "(" simpleExpression() ")"
 }
 
 void variable() #VARIABLE : {}

@@ -427,6 +427,8 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
       }
       jj_consume_token(SEMICOLON);
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case MINUS:
+      case LEFT_PAREN:
       case IDENTIFIER:
       case STRING_LIT:
       case INTEGER:
@@ -744,6 +746,8 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
                 }
       jj_consume_token(EQUALS);
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+      case MINUS:
+      case LEFT_PAREN:
       case IDENTIFIER:
       case STRING_LIT:
       case INTEGER:
@@ -847,11 +851,15 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
       jj_consume_token(LEFT_PAREN);
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case AT:
+      case MINUS:
+      case LEFT_PAREN:
       case IDENTIFIER:
       case STRING_LIT:
       case INTEGER:
       case REAL:
         switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case MINUS:
+        case LEFT_PAREN:
         case IDENTIFIER:
         case STRING_LIT:
         case INTEGER:
@@ -878,6 +886,8 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
           }
           jj_consume_token(COMMA);
           switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+          case MINUS:
+          case LEFT_PAREN:
           case IDENTIFIER:
           case STRING_LIT:
           case INTEGER:
@@ -1207,7 +1217,46 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
   }
 
   static final public void simpleExpression() throws ParseException {
-    term();
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case LEFT_PAREN:
+    case IDENTIFIER:
+    case STRING_LIT:
+    case INTEGER:
+    case REAL:
+      term();
+      break;
+    case MINUS:
+      jj_consume_token(MINUS);
+            ASTNEGATE jjtn001 = new ASTNEGATE(JJTNEGATE);
+            boolean jjtc001 = true;
+            jjtree.openNodeScope(jjtn001);
+      try {
+        term();
+      } catch (Throwable jjte001) {
+            if (jjtc001) {
+              jjtree.clearNodeScope(jjtn001);
+              jjtc001 = false;
+            } else {
+              jjtree.popNode();
+            }
+            if (jjte001 instanceof RuntimeException) {
+              {if (true) throw (RuntimeException)jjte001;}
+            }
+            if (jjte001 instanceof ParseException) {
+              {if (true) throw (ParseException)jjte001;}
+            }
+            {if (true) throw (Error)jjte001;}
+      } finally {
+            if (jjtc001) {
+              jjtree.closeNodeScope(jjtn001,  1);
+            }
+      }
+      break;
+    default:
+      jj_la1[27] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
     label_7:
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -1216,40 +1265,13 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
         ;
         break;
       default:
-        jj_la1[27] = jj_gen;
+        jj_la1[28] = jj_gen;
         break label_7;
       }
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case PLUS:
         jj_consume_token(PLUS);
-              ASTADD jjtn001 = new ASTADD(JJTADD);
-              boolean jjtc001 = true;
-              jjtree.openNodeScope(jjtn001);
-        try {
-          term();
-        } catch (Throwable jjte001) {
-              if (jjtc001) {
-                jjtree.clearNodeScope(jjtn001);
-                jjtc001 = false;
-              } else {
-                jjtree.popNode();
-              }
-              if (jjte001 instanceof RuntimeException) {
-                {if (true) throw (RuntimeException)jjte001;}
-              }
-              if (jjte001 instanceof ParseException) {
-                {if (true) throw (ParseException)jjte001;}
-              }
-              {if (true) throw (Error)jjte001;}
-        } finally {
-              if (jjtc001) {
-                jjtree.closeNodeScope(jjtn001,  2);
-              }
-        }
-        break;
-      case MINUS:
-        jj_consume_token(MINUS);
-              ASTSUBTRACT jjtn002 = new ASTSUBTRACT(JJTSUBTRACT);
+              ASTADD jjtn002 = new ASTADD(JJTADD);
               boolean jjtc002 = true;
               jjtree.openNodeScope(jjtn002);
         try {
@@ -1274,14 +1296,42 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
               }
         }
         break;
+      case MINUS:
+        jj_consume_token(MINUS);
+              ASTSUBTRACT jjtn003 = new ASTSUBTRACT(JJTSUBTRACT);
+              boolean jjtc003 = true;
+              jjtree.openNodeScope(jjtn003);
+        try {
+          term();
+        } catch (Throwable jjte003) {
+              if (jjtc003) {
+                jjtree.clearNodeScope(jjtn003);
+                jjtc003 = false;
+              } else {
+                jjtree.popNode();
+              }
+              if (jjte003 instanceof RuntimeException) {
+                {if (true) throw (RuntimeException)jjte003;}
+              }
+              if (jjte003 instanceof ParseException) {
+                {if (true) throw (ParseException)jjte003;}
+              }
+              {if (true) throw (Error)jjte003;}
+        } finally {
+              if (jjtc003) {
+                jjtree.closeNodeScope(jjtn003,  2);
+              }
+        }
+        break;
       default:
-        jj_la1[28] = jj_gen;
+        jj_la1[29] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
     }
   }
 
+// i = 2 * -3
   static final public void term() throws ParseException {
     factor();
     label_8:
@@ -1292,7 +1342,7 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
         ;
         break;
       default:
-        jj_la1[29] = jj_gen;
+        jj_la1[30] = jj_gen;
         break label_8;
       }
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
@@ -1351,7 +1401,7 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
         }
         break;
       default:
-        jj_la1[30] = jj_gen;
+        jj_la1[31] = jj_gen;
         jj_consume_token(-1);
         throw new ParseException();
       }
@@ -1372,8 +1422,13 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
     case STRING_LIT:
       stringConstant();
       break;
+    case LEFT_PAREN:
+      jj_consume_token(LEFT_PAREN);
+      simpleExpression();
+      jj_consume_token(RIGHT_PAREN);
+      break;
     default:
-      jj_la1[31] = jj_gen;
+      jj_la1[32] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -1501,11 +1556,6 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
     return false;
   }
 
-  static private boolean jj_3R_11() {
-    if (jj_scan_token(IDENTIFIER)) return true;
-    return false;
-  }
-
   static private boolean jj_3R_10() {
     if (jj_3R_11()) return true;
     if (jj_scan_token(EQUALS)) return true;
@@ -1514,6 +1564,11 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
 
   static private boolean jj_3_1() {
     if (jj_3R_9()) return true;
+    return false;
+  }
+
+  static private boolean jj_3R_11() {
+    if (jj_scan_token(IDENTIFIER)) return true;
     return false;
   }
 
@@ -1529,7 +1584,7 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
   static private Token jj_scanpos, jj_lastpos;
   static private int jj_la;
   static private int jj_gen;
-  static final private int[] jj_la1 = new int[32];
+  static final private int[] jj_la1 = new int[33];
   static private int[] jj_la1_0;
   static private int[] jj_la1_1;
   static private int[] jj_la1_2;
@@ -1539,13 +1594,13 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
       jj_la1_init_2();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0x417c400,0x417c400,0x417c400,0x600000,0x417c400,0x417c400,0x0,0x0,0x0,0x417c400,0x417c400,0x417c400,0x417c400,0x800,0x0,0x800000,0x0,0x2000000,0x0,0x2000000,0x2000000,0x6000000,0x6000000,0x0,0x0,0xf0000000,0xf0000000,0x0,0x0,0x0,0x0,0x0,};
+      jj_la1_0 = new int[] {0x417c400,0x417c400,0x417c400,0x600000,0x417c400,0x417c400,0x0,0x0,0x0,0x417c400,0x417c400,0x417c400,0x417c400,0x800,0x0,0x800000,0x0,0x2000000,0x0,0x2000000,0x2000000,0x6000000,0x6000000,0x0,0x0,0xf0000000,0xf0000000,0x0,0x0,0x0,0x0,0x0,0x0,};
    }
    private static void jj_la1_init_1() {
-      jj_la1_1 = new int[] {0x100000,0x100000,0x100000,0x0,0x100000,0x108000,0x100000,0xf00000,0x100000,0x108000,0x108000,0x108000,0x108000,0x0,0x4,0xf00000,0x2000,0xf00000,0x4,0xf00000,0xf00000,0x0,0x0,0x100000,0x4004,0x3,0x3,0x60,0x60,0x180,0x180,0xf00000,};
+      jj_la1_1 = new int[] {0x100000,0x100000,0x100000,0x0,0x100000,0x108000,0x100000,0xf02040,0x100000,0x108000,0x108000,0x108000,0x108000,0x0,0x4,0xf02040,0x2000,0xf02040,0x4,0xf02040,0xf02040,0x0,0x0,0x100000,0x4004,0x3,0x3,0xf02040,0x60,0x60,0x180,0x180,0xf02000,};
    }
    private static void jj_la1_init_2() {
-      jj_la1_2 = new int[] {0x1,0x1,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,};
+      jj_la1_2 = new int[] {0x1,0x1,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,};
    }
   static final private JJCalls[] jj_2_rtns = new JJCalls[1];
   static private boolean jj_rescan = false;
@@ -1569,7 +1624,7 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 32; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 33; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -1585,7 +1640,7 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
     jj_ntk = -1;
     jjtree.reset();
     jj_gen = 0;
-    for (int i = 0; i < 32; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 33; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -1603,7 +1658,7 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 32; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 33; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -1615,7 +1670,7 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
     jj_ntk = -1;
     jjtree.reset();
     jj_gen = 0;
-    for (int i = 0; i < 32; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 33; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -1632,7 +1687,7 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 32; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 33; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -1643,7 +1698,7 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
     jj_ntk = -1;
     jjtree.reset();
     jj_gen = 0;
-    for (int i = 0; i < 32; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 33; i++) jj_la1[i] = -1;
     for (int i = 0; i < jj_2_rtns.length; i++) jj_2_rtns[i] = new JJCalls();
   }
 
@@ -1760,7 +1815,7 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
       la1tokens[jj_kind] = true;
       jj_kind = -1;
     }
-    for (int i = 0; i < 32; i++) {
+    for (int i = 0; i < 33; i++) {
       if (jj_la1[i] == jj_gen) {
         for (int j = 0; j < 32; j++) {
           if ((jj_la1_0[i] & (1<<j)) != 0) {

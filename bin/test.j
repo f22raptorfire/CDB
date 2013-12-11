@@ -4,25 +4,29 @@
 .field public static _database Lwci/runtime/CDBC;
 .field public static _references [Lwci/runtime/Referencer;
 
-.field public static i F
+.field public static i I
 
-.method static editReal(Lwci/runtime/Referencer;)V
+.method static editReal(I)V
 .limit stack 16
 .limit locals 10
 
-	ldc 2.3
-	fstore 1
-	ldc 3
-	fstore 2
-	aload 0
+	getstatic java/lang/System/out Ljava/io/PrintStream;
+	iload 0
+	invokevirtual java/io/PrintStream/println(I)V
+	iload 0
+	ldc 1
+	isub
+	istore 0
+	iload 0
+	ldc 0
+	if_icmpgt L000
+	goto L001
+L000:
 
-	;AddCodeGenerator
-	ldc 4.5
-	aload 1
-	fdiv
-	aload 2
-	fadd
-	invokevirtual wci.runtime/Referencer/setValue(F)V
+	;CallCodeGenerator
+	iload 0
+	invokestatic test/editReal(I)V
+L001:
 	return
 
 .end method
@@ -51,31 +55,16 @@
 	ldc ""
 	invokenonvirtual wci/runtime/CDBC/<init>(Ljava/lang/String;)V
 	putstatic test/_database Lwci/runtime/CDBC;
-	ldc 1.2
-	putstatic test/i F
+
+	;AddCodeGenerator
+	ldc 5
+	ldc "yes"
+	iadd
+	putstatic test/i I
 
 	;CallCodeGenerator
-	getstatic test/_references [Lwci/runtime/Referencer;
-	ldc 0
-	new wci/runtime/Referencer
-	dup
-	getstatic test/i F
-	invokenonvirtual wci/runtime/Referencer/<init>(F)V
-	aastore
-	getstatic test/_references [Lwci/runtime/Referencer;
-	ldc 0
-	aaload
-	invokestatic test/editReal(Lwci/runtime/Referencer;)V
-
-	;Reference unwrap
-	getstatic test/_references [Lwci/runtime/Referencer;
-	ldc 0
-	aaload
-	invokevirtual wci.runtime/Referencer/getFloatValue()F
-	putstatic test/i F
-	getstatic java/lang/System/out Ljava/io/PrintStream;
-	getstatic test/i F
-	invokevirtual java/io/PrintStream/println(F)V
+	getstatic test/i I
+	invokestatic test/editReal(I)V
 	return
 
 .end method
