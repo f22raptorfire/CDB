@@ -1,23 +1,20 @@
 DATABASE "";
 
 $string i, j;
-$integer k;
-i = "fail";
-j = "false";
-k = 1;
-
+i = "zero";
+j = "one";
+i = 3;
 $proc p;
-p = new (@string x y, @integer z) {
+p = new ($string x y, $integer z) {
 	PRINTLN x;
+	x = "two";
+	PRINTLN x;
+	y = "three";
 	PRINTLN y;
 	PRINTLN z;
-	x = "win";
-	y = "true";
-	z = 3;
 };
 
-p(@i, @j, @k);
+p("four", j, 3 - 1);
 
 PRINTLN i;
 PRINTLN j;
-PRINTLN k;

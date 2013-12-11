@@ -824,6 +824,7 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
     entry.setAttribute(ROUTINE_CODE, rootNode);
         entry.setAttribute(ROUTINE_ICODE, iCode);
         entry.setDefinition(DefinitionImpl.PROCEDURE);
+        symTabStack.pop();
   }
 
   static final public void routineParameters() throws ParseException {
@@ -1489,14 +1490,14 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
     return false;
   }
 
-  static private boolean jj_3R_10() {
-    if (jj_3R_11()) return true;
-    if (jj_scan_token(EQUALS)) return true;
+  static private boolean jj_3R_11() {
+    if (jj_scan_token(IDENTIFIER)) return true;
     return false;
   }
 
-  static private boolean jj_3R_11() {
-    if (jj_scan_token(IDENTIFIER)) return true;
+  static private boolean jj_3R_10() {
+    if (jj_3R_11()) return true;
+    if (jj_scan_token(EQUALS)) return true;
     return false;
   }
 

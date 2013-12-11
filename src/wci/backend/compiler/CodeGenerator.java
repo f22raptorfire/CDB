@@ -79,6 +79,7 @@ public class CodeGenerator extends Backend
         	if (entry.getDefinition() == PROCEDURE) {
         		objectFile.append(".method static " + entry.getName() + "(");
         		ArrayList<SymTabEntry> parameters = (ArrayList<SymTabEntry>) entry.getAttribute(ROUTINE_PARMS);
+        		
         		if (parameters != null) {
 	        		for (SymTabEntry parameter : parameters) {
 	        			if (parameter.getDefinition() == DefinitionImpl.REFERENCE)
@@ -91,8 +92,10 @@ public class CodeGenerator extends Backend
         		objectFile.append(".limit stack 16\n");
             	objectFile.append(".limit locals 10\n\n");
 
+            	symTabStack.push((SymTab) entry.getAttribute(ROUTINE_SYMTAB));
             	StatementCodeGenerator gen = new StatementCodeGenerator(this);
         		objectFile.append(gen.generate((ICodeNode)((ICodeImpl)entry.getAttribute(ROUTINE_ICODE)).getRoot()).toString());
+        		symTabStack.pop();
         		
         		objectFile.append("\treturn\n");
             	objectFile.append("\n");

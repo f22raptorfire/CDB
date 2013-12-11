@@ -28,11 +28,10 @@ public class AssignmentCodeGenerator extends StatementCodeGenerator {
     	ArrayList<ICodeNode> children = node.getChildren();
     	StatementCodeGenerator cg = new StatementCodeGenerator(this);
 
-    	SymTab table = symTabStack.getLocalSymTab();
-    	SymTabEntry entry = table.lookup((String)children.get(0).getAttribute(ICodeKeyImpl.ID));
+    	SymTabEntry entry = symTabStack.lookup((String)children.get(0).getAttribute(ICodeKeyImpl.ID));
     	String result;
     	
-    	if (entry == null) {
+    	if (entry.getSymTab().getNestingLevel() == 1) {
         	SymTabEntry programId = symTabStack.getProgramId();
 	    	String prefix = programId.getName() + "/", type;
 	    	entry = symTabStack.lookup((String)children.get(0).getAttribute(ICodeKeyImpl.ID));

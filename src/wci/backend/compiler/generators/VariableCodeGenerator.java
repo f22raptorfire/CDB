@@ -4,6 +4,7 @@ import wci.backend.compiler.CodeGenerator;
 import wci.intermediate.ICodeNode;
 import wci.intermediate.SymTab;
 import wci.intermediate.SymTabEntry;
+import wci.intermediate.TypeSpec;
 import wci.intermediate.icodeimpl.ICodeKeyImpl;
 import wci.intermediate.symtabimpl.DefinitionImpl;
 import wci.intermediate.symtabimpl.Predefined;
@@ -24,11 +25,21 @@ public class VariableCodeGenerator extends StatementCodeGenerator {
     public Object generate(ICodeNode node)
     {
     	SymTabEntry programId = symTabStack.getProgramId();
-    	SymTab table = symTabStack.getLocalSymTab();
-    	SymTabEntry entry = table.lookup((String)node.getAttribute(ICodeKeyImpl.ID));
+    	SymTabEntry entry = symTabStack.lookup((String)node.getAttribute(ICodeKeyImpl.ID));
     	String result = "\t";
-    	if (entry != null) {
-    		if (entry.getTypeSpec() == Predefined.integerType && entry.getDefinition() != DefinitionImpl.REFERENCE)
+    	if (entry.getDefinition() == DefinitionImpl.REFERENCE) {
+    		result += "\n\t;reference unwrap\n";
+    		result += "\taload " + entry.getIndex() + "\n";
+			TypeSpec type = node.getTypeSpec();
+			if (type == Predefined.integerType)
+				result += "\tinvokevirtual wci.runtime/Referencer/getIntegerValue()I\n";
+			else
+			if (type == Predefined.stringType)
+				result += "\tinvokevirtual wci.runtime/Referencer/getStringValue()Ljava/lang/String;\n";
+    	} 
+    	else
+    	if (entry.getSymTab().getNestingLevel() > 1) {
+    		if (entry.getTypeSpec() == Predefined.integerType)
     			result += "iload ";
     		else
     			result += "aload ";

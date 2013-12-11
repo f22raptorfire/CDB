@@ -371,6 +371,7 @@ void routine(SymTabEntry entry) #void : {SimpleNode rootNode;}
     iCode.setRoot(rootNode);
     entry.setAttribute(ROUTINE_CODE, rootNode);	entry.setAttribute(ROUTINE_ICODE, iCode);
 	entry.setDefinition(DefinitionImpl.PROCEDURE);
+	symTabStack.pop();
   }
 }
 
