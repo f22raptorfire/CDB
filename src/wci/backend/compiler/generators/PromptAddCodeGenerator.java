@@ -7,9 +7,9 @@ import wci.intermediate.ICodeNode;
 import wci.intermediate.SymTabEntry;
 import wci.intermediate.icodeimpl.ICodeKeyImpl;
 
-public class PromptAddGenerator extends StatementCodeGenerator {
+public class PromptAddCodeGenerator extends StatementCodeGenerator {
 
-	public PromptAddGenerator(CodeGenerator parent) {
+	public PromptAddCodeGenerator(CodeGenerator parent) {
 		super(parent);
 	}
 

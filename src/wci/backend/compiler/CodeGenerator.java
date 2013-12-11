@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import wci.intermediate.*;
 import wci.intermediate.icodeimpl.ICodeImpl;
+import wci.intermediate.symtabimpl.DefinitionImpl;
 import wci.intermediate.symtabimpl.SymTabKeyImpl;
 import wci.backend.*;
 import wci.backend.compiler.generators.StatementCodeGenerator;
@@ -54,39 +55,40 @@ public class CodeGenerator extends Backend
         this.varCount = 0;
 
     	printHeader(objectFile);
-
+    	printFields(objectFile);
+    	printMethods(objectFile);
+    	printInit(objectFile);
+    	printMain(objectFile);
+    	objectFile.close();
+    }
+    
+    private void printHeader(PrintWriter objectFile) throws FileNotFoundException {
+    	SymTabEntry programId = symTabStack.getProgramId();
+    	objectFile.append(".class public " + programId.getName() + "\n");
+    	objectFile.append(".super java/lang/Object\n");
+    	objectFile.append("\n");
+    	objectFile.append(".field public static _database Lwci/runtime/CDBC;\n");
+    	objectFile.append(".field public static _references [Lwci/runtime/Referencer;\n\n");
+    }
+    
+    private void printMethods(PrintWriter objectFile) throws FileNotFoundException {
     	SymTabEntry programId = symTabStack.getProgramId();
     	SymTab program = (SymTab) programId.getAttribute(SymTabKeyImpl.ROUTINE_SYMTAB);
     	ArrayList<SymTabEntry> entries = program.sortedEntries();
-    	String type;
     	for (SymTabEntry entry : entries) {
-    		if (entry.getDefinition() == VARIABLE) {
-    			type = entry.getTypeSpec().getTypeId();
-    			objectFile.append(".field public static " + entry.getName() + " " + type + "\n");
-    		}
-    	}
-
-    	objectFile.append("\n");
-    	objectFile.append(".method public <init>()V\n");
-		objectFile.append(".limit stack 1\n\n");
-		objectFile.append("\taload_0\n");
-		objectFile.append("\tinvokenonvirtual java/lang/Object/<init>()V\n");
-		objectFile.append("\treturn\n");
-    	objectFile.append("\n");
-		objectFile.append(".end method\n");
-    	objectFile.append("\n");
-
-        for (SymTabEntry entry : entries) {
         	if (entry.getDefinition() == PROCEDURE) {
         		objectFile.append(".method static " + entry.getName() + "(");
         		ArrayList<SymTabEntry> parameters = (ArrayList<SymTabEntry>) entry.getAttribute(ROUTINE_PARMS);
         		if (parameters != null) {
 	        		for (SymTabEntry parameter : parameters) {
-	        			objectFile.append(parameter.getTypeSpec().getTypeId());
+	        			if (parameter.getDefinition() == DefinitionImpl.REFERENCE)
+	        				objectFile.append("Lwci/runtime/Referencer;");
+	        			else
+	        				objectFile.append(parameter.getTypeSpec().getTypeId());
 	        		}
         		}
         		objectFile.append(")V\n");
-        		objectFile.append(".limit stack 16\n\n");
+        		objectFile.append(".limit stack 16\n");
             	objectFile.append(".limit locals 10\n\n");
 
             	StatementCodeGenerator gen = new StatementCodeGenerator(this);
@@ -98,25 +100,48 @@ public class CodeGenerator extends Backend
             	objectFile.append("\n");
         	}
         }
-    	
-    	objectFile.append(".method public static main([Ljava/lang/String;)V\n");
-    	objectFile.append(".limit stack  " + STACK_LIMIT + "\n");
-    	objectFile.append(".limit locals 10\n\n");
-
-    	ICodeNode rootNode = (ICodeNode) iCode.getRoot();
-    	StatementCodeGenerator gen = new StatementCodeGenerator(this);
-    	objectFile.append(gen.generate(rootNode).toString());
-    	
-    	objectFile.append("\treturn\n");
-    	objectFile.append("\n.end method\n");
-    	objectFile.close();
     }
     
-    private void printHeader(PrintWriter objectFile) throws FileNotFoundException {
+    private void printFields(PrintWriter objectFile) throws FileNotFoundException {
     	SymTabEntry programId = symTabStack.getProgramId();
-    	objectFile.append(".class public " + programId.getName() + "\n");
-    	objectFile.append(".super java/lang/Object\n");
-    	objectFile.append("\n");
-    	objectFile.append(".field public static _database Lwci/runtime/CDBC;\n");
+    	SymTab program = (SymTab) programId.getAttribute(SymTabKeyImpl.ROUTINE_SYMTAB);
+    	ArrayList<SymTabEntry> entries = program.sortedEntries();
+    	String type;
+    	for (SymTabEntry entry : entries) {
+    		if (entry.getDefinition() == VARIABLE) {
+    			type = entry.getTypeSpec().getTypeId();
+    			objectFile.append(".field public static " + entry.getName() + " " + type + "\n");
+    		}
+    	}
+		objectFile.append("\n");
+    }
+    
+    private void printInit(PrintWriter objectFile) throws FileNotFoundException {
+		objectFile.append(".method public <init>()V\n");
+		objectFile.append(".limit stack 1\n\n");
+		objectFile.append("\taload_0\n");
+		objectFile.append("\tinvokenonvirtual java/lang/Object/<init>()V\n");
+		objectFile.append("\treturn\n");
+		objectFile.append("\n");
+		objectFile.append(".end method\n");
+		objectFile.append("\n");
+    }
+    
+    private void printMain(PrintWriter objectFile) throws FileNotFoundException {
+    	SymTabEntry programId = symTabStack.getProgramId();
+		objectFile.append(".method public static main([Ljava/lang/String;)V\n");
+		objectFile.append(".limit stack  " + STACK_LIMIT + "\n");
+		objectFile.append(".limit locals 10\n\n");
+		objectFile.append("\t;References init:\n");
+		objectFile.append("\tbipush 10\n");
+		objectFile.append("\tanewarray wci/runtime/Referencer\n");
+		objectFile.append("\tputstatic " + programId.getName() + "/_references [Lwci/runtime/Referencer;\n\n");
+		
+		ICodeNode rootNode = (ICodeNode) iCode.getRoot();
+		StatementCodeGenerator gen = new StatementCodeGenerator(this);
+		objectFile.append(gen.generate(rootNode).toString());
+		
+		objectFile.append("\treturn\n");
+		objectFile.append("\n.end method\n");
     }
 }

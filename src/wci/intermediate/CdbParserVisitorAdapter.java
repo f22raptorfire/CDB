@@ -23,6 +23,7 @@ import wci.frontend.ASTPRINTLN;
 import wci.frontend.ASTPROMPT_ADD;
 import wci.frontend.ASTPROMPT_SHOW;
 import wci.frontend.ASTREAL_CONSTANT;
+import wci.frontend.ASTREFERENCE;
 import wci.frontend.ASTSTRING_CONSTANT;
 import wci.frontend.ASTSUBTRACT;
 import wci.frontend.ASTVARIABLE;
@@ -279,6 +280,16 @@ public class CdbParserVisitorAdapter implements CdbParserVisitor
 	@Override
 	public Object visit(ASTPARAMETERS node, Object data) {
 		node.setType(ICodeNodeTypeImpl.PARAMETERS);
+		int childCount = node.jjtGetNumChildren();
+		for (int i = 0; i < childCount; i++) {
+			node.addChild((ICodeNode) node.jjtGetChild(i));
+		}
+		return node.childrenAccept(this, data);
+	}
+
+	@Override
+	public Object visit(ASTREFERENCE node, Object data) {
+		node.setType(ICodeNodeTypeImpl.REFERENCE);
 		int childCount = node.jjtGetNumChildren();
 		for (int i = 0; i < childCount; i++) {
 			node.addChild((ICodeNode) node.jjtGetChild(i));

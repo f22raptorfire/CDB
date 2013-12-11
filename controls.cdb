@@ -1,7 +1,7 @@
-DATABASE "C:\Users\Jason\Documents\GitHub\CDB"
+DATABASE "C:\Users\Jason\Documents\GitHub\CDB";
 
-@integer i, j;
-@string s;
+$integer i, j;
+$string s;
 i = 1;
 j = 4;
 s = "DEMO!";

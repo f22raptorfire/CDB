@@ -4,6 +4,15 @@
 .field public static _database Lwci/runtime/CDBC;
 .field public static i I
 
+.method public <init>()V
+.limit stack 1
+
+	aload_0
+	invokenonvirtual java/lang/Object/<init>()V
+	return
+
+.end method
+
 .method public static main([Ljava/lang/String;)V
 .limit stack  16
 .limit locals 10
@@ -16,7 +25,7 @@
 	ldc 0
 	putstatic prompts/i I
 L000:
-	getstatic prompts/i I
+	iload 0
 	ldc 3
 	if_icmplt L001
 	goto L002
@@ -25,7 +34,7 @@ L001:
 	invokestatic wci.runtime/CDBC/addToCSV(Ljava/lang/String;)V
 	ldc "test"
 	invokestatic wci.runtime/CDBC/viewCSV(Ljava/lang/String;)V
-	getstatic prompts/i I
+	iload 0
 	ldc 1
 	iadd
 	putstatic prompts/i I

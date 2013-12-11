@@ -1,6 +1,6 @@
-DATABASE "C:\Users\Jason\Documents\GitHub\CDB"
+DATABASE "C:\Users\Jason\Documents\GitHub\CDB";
 
-@integer i;
+$integer i;
 for  (i = 0; i < 3; i = i + 1) {
 	PROMPT ADD "test";
 	PROMPT SHOW "test";

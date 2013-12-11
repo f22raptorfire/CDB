@@ -5,6 +5,7 @@ import wci.intermediate.ICodeNode;
 import wci.intermediate.SymTab;
 import wci.intermediate.SymTabEntry;
 import wci.intermediate.icodeimpl.ICodeKeyImpl;
+import wci.intermediate.symtabimpl.DefinitionImpl;
 import wci.intermediate.symtabimpl.Predefined;
 import wci.intermediate.symtabimpl.SymTabKeyImpl;
 
@@ -27,7 +28,7 @@ public class VariableCodeGenerator extends StatementCodeGenerator {
     	SymTabEntry entry = table.lookup((String)node.getAttribute(ICodeKeyImpl.ID));
     	String result = "\t";
     	if (entry != null) {
-    		if (entry.getTypeSpec() == Predefined.integerType)
+    		if (entry.getTypeSpec() == Predefined.integerType && entry.getDefinition() != DefinitionImpl.REFERENCE)
     			result += "iload ";
     		else
     			result += "aload ";

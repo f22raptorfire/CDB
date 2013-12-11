@@ -377,9 +377,9 @@ void routine(SymTabEntry entry) #void : {SimpleNode rootNode;}
 void routineParameters() #PARAMETERS : {}
 {
   <LEFT_PAREN> (
-		  expression()
+		  (expression() | reference())
 		(
-		  <COMMA> expression()
+		  <COMMA> (expression() | reference())
 		)*
 	)? <RIGHT_PAREN> <SEMICOLON>
 }
@@ -388,17 +388,23 @@ void parameterList(SymTabEntry entry) #void : {
 						 ArrayList<SymTabEntry> variableList;
                          int index = 0;
                          TypeSpec type;
-                         SymTabEntry typeId;}{
+                         SymTabEntry typeId;
+                         boolean reference;}{
 	 {
 	    variableList = new ArrayList<SymTabEntry>();
 	 }    <LEFT_PAREN> (
-	<DOLLAR> <IDENTIFIER>		{
+		( <DOLLAR> { reference = false; }
+		| <AT> { reference = true; })
+		<IDENTIFIER>		{
 		  	typeId = symTabStack.lookup(token.image.toLowerCase());
             typeId.appendLineNumber(token.beginLine);
             type = typeId.getTypeSpec();
 		}
 	(	  <IDENTIFIER>		{
-            processVariableDecl(token, index++, variableList);
+		    if (reference)
+		    	processReferenceDecl(token, index++, variableList);
+		    else
+            	processVariableDecl(token, index++, variableList);
        		variableList.get(index - 1).setTypeSpec(type);
 		}
 	)*
@@ -410,6 +416,9 @@ void parameterList(SymTabEntry entry) #void : {
 	    return;}
  	)
   )*}
+
+void reference() #REFERENCE : {}{	<AT> variable() 
+} 
 
 void expression() #void : {}
 {
@@ -494,6 +503,17 @@ void processVariableDecl(Token token, int index,
     SymTabEntry variableId = symTabStack.enterLocal(token.image);
     variableId.setIndex(index);
     variableId.setDefinition(DefinitionImpl.VARIABLE);
+    variableId.appendLineNumber(token.beginLine);
+    variableList.add(variableId);
+}
+
+JAVACODE
+void processReferenceDecl(Token token, int index,
+                         ArrayList<SymTabEntry> variableList) #void
+{
+    SymTabEntry variableId = symTabStack.enterLocal(token.image);
+    variableId.setIndex(index);
+    variableId.setDefinition(DefinitionImpl.REFERENCE);
     variableId.appendLineNumber(token.beginLine);
     variableList.add(variableId);
 }

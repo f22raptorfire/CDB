@@ -7,9 +7,9 @@ import wci.intermediate.ICodeNode;
 import wci.intermediate.SymTabEntry;
 import wci.intermediate.icodeimpl.ICodeKeyImpl;
 
-public class DatabaseGenerator extends StatementCodeGenerator {
+public class PromptShowCodeGenerator extends StatementCodeGenerator {
 
-	public DatabaseGenerator(CodeGenerator parent) {
+	public PromptShowCodeGenerator(CodeGenerator parent) {
 		super(parent);
 	}
 
@@ -21,11 +21,12 @@ public class DatabaseGenerator extends StatementCodeGenerator {
      */
     public Object generate(ICodeNode node)
     {
+    	SymTabEntry programId = symTabStack.getProgramId();
     	StatementCodeGenerator cg = new StatementCodeGenerator(this);
-    	String result = "\tnew wci/runtime/CDBC\n\tdup\n";
+    	String result = "";
+    	//result += "\tgetstatic " + programId.getName() + "/_database Lwci/runtime/CDBC;\n";
     	result += (String) cg.generate(node.getChildren().get(0));
-    	result += "\tinvokenonvirtual wci/runtime/CDBC/<init>(Ljava/lang/String;)V\n";
-    	result += "\tputstatic test/_database Lwci/runtime/CDBC;\n";
+    	result += "\tinvokestatic wci.runtime/CDBC/viewCSV(Ljava/lang/String;)V\n";
     	return result;
     }
 }

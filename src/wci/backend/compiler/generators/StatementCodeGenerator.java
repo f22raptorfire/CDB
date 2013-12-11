@@ -32,7 +32,6 @@ public class StatementCodeGenerator extends CodeGenerator
     public Object generate(ICodeNode node)
     {
         ICodeNodeTypeImpl nodeType = (ICodeNodeTypeImpl) node.getType();
-        System.out.println(node + " " + nodeType);
         switch (nodeType) {
 
 	        case ASSIGN: {
@@ -122,23 +121,28 @@ public class StatementCodeGenerator extends CodeGenerator
             }
             
             case PROMPT_SHOW: {
-            	PromptShowGenerator promptShowGenerator = new PromptShowGenerator(this);
+            	PromptShowCodeGenerator promptShowGenerator = new PromptShowCodeGenerator(this);
             	return promptShowGenerator.generate(node);
             }
             
             case PROMPT_ADD: {
-            	PromptAddGenerator promptAddGenerator = new PromptAddGenerator(this);
+            	PromptAddCodeGenerator promptAddGenerator = new PromptAddCodeGenerator(this);
             	return promptAddGenerator.generate(node);
             }
             
             case DATABASE: {
-            	DatabaseGenerator databaseGenerator = new DatabaseGenerator(this);
+            	DatabaseCodeGenerator databaseGenerator = new DatabaseCodeGenerator(this);
             	return databaseGenerator.generate(node);
             }
             
             case CALL: {
-            	CallGenerator callGenerator = new CallGenerator(this);
+            	CallCodeGenerator callGenerator = new CallCodeGenerator(this);
             	return callGenerator.generate(node);
+            }
+            
+            case REFERENCE: {
+            	ReferenceCodeGenerator referenceGenerator = new ReferenceCodeGenerator(this);
+            	return referenceGenerator.generate(node);
             }
             
             default: {

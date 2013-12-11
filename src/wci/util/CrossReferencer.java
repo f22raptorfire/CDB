@@ -188,7 +188,8 @@ public class CrossReferencer
             	// Print the parms and parms count
             	if (list != null) {
             		for (SymTabEntry entry1 : list) {
-                        System.out.println(INDENT + "Type id = " + entry1.getTypeSpec().getIdentifier().getName() + ", Name = " + entry1.getName());
+                        System.out.println(INDENT + "Type id = " + entry1.getTypeSpec().getIdentifier().getName() 
+                        		+ ", Name = " + entry1.getName() + ", Definition = " + entry1.getDefinition());
             		}
             	}
             }
