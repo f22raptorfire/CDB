@@ -36,6 +36,9 @@ public class VariableCodeGenerator extends StatementCodeGenerator {
 			else
 			if (type == Predefined.stringType)
 				result += "\tinvokevirtual wci.runtime/Referencer/getStringValue()Ljava/lang/String;\n";
+			else
+			if (type == Predefined.realType)
+				result += "\tinvokevirtual wci.runtime/Referencer/getFloatValue()F\n";
     	} 
     	else
     	if (entry.getSymTab().getNestingLevel() > 1) {

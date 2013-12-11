@@ -36,4 +36,7 @@ public interface SymTab
      * @return a list of symbol table entries sorted by name.
      */
     public ArrayList<SymTabEntry> sortedEntries();
+    
+    public void setReference(SymTabEntry entry);
+    public SymTabEntry getReference();
 }

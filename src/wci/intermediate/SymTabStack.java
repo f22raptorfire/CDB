@@ -42,6 +42,8 @@ public interface SymTabStack
      */
     public SymTab push();
 
+    public SymTab push(SymTabEntry entry);
+    
     /**
      * Push a symbol table onto the stack.
      * @param symTab the symbol table to push.

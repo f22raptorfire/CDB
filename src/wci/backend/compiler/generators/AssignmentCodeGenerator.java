@@ -29,7 +29,8 @@ public class AssignmentCodeGenerator extends StatementCodeGenerator {
     	StatementCodeGenerator cg = new StatementCodeGenerator(this);
 
     	SymTabEntry entry = symTabStack.lookup((String)children.get(0).getAttribute(ICodeKeyImpl.ID));
-    	String result;
+
+    	String result = "\n\t;AssignmentCodeGenerator\n";
     	
     	if (entry.getSymTab().getNestingLevel() == 1) {
         	SymTabEntry programId = symTabStack.getProgramId();
@@ -52,6 +53,12 @@ public class AssignmentCodeGenerator extends StatementCodeGenerator {
     				result = "\taload " + entry.getIndex() + "\n" + result + "\tinvokevirtual wci.runtime/Referencer/setValue(Ljava/lang/String;)V\n";
     			else
     				result += "\tastore " + entry.getIndex() + "\n";
+    		else
+			if (entry.getTypeSpec() == Predefined.realType)
+    			if (entry.getDefinition() == DefinitionImpl.REFERENCE)
+    				result = "\taload " + entry.getIndex() + "\n" + result + "\tinvokevirtual wci.runtime/Referencer/setValue(F)V\n";
+    			else
+    				result += "\tfstore " + entry.getIndex() + "\n";
     		else
     			result += "\tastore " + entry.getIndex() + "\n";
     	}

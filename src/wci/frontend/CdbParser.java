@@ -625,10 +625,21 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
                                          int index = 0;
     jj_consume_token(DOLLAR);
     jj_consume_token(IDENTIFIER);
+                        if (symTabStack.getCurrentNestingLevel() != 1)
+                        {
+                          index = (int) symTabStack.getLocalSymTab().getReference().getAttribute(ROUTINE_LOCALS_COUNT);
+                        }
                         SymTabEntry typeId = symTabStack.lookup(token.image.toLowerCase());
             typeId.appendLineNumber(token.beginLine);
             TypeSpec type = typeId.getTypeSpec();
     jj_consume_token(IDENTIFIER);
+            SymTabEntry entry = symTabStack.getLocalSymTab().lookup(token.image.toLowerCase());
+                        if (entry != null)
+                        {
+                                handleError(token);
+                                System.out.println("*** Variable already exists");
+                                {if (true) return;}
+                        }
             variableList = new ArrayList<SymTabEntry>();
             processVariableDecl(token, index++, variableList);
     label_3:
@@ -729,7 +740,7 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
                 if (type.getForm() == TypeFormImpl.PROCEDURE)
         {
                 entry.setDefinition(DefinitionImpl.PROCEDURE);
-                entry.setAttribute(ROUTINE_SYMTAB, symTabStack.push());
+                entry.setAttribute(ROUTINE_SYMTAB, symTabStack.push(entry));
                 }
       jj_consume_token(EQUALS);
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {

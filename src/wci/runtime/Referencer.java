@@ -4,11 +4,6 @@ public class Referencer {
 
 	private Object value;
 	
-	public static void main(String[] args) {
-		Referencer ref = new Referencer("Test");
-		System.out.println((String) null);
-	}
-	
 	public Referencer(String val) {
 		value = val;
 	}
@@ -16,11 +11,23 @@ public class Referencer {
 		value = new Integer(val);
 	}
 	
+	public Referencer(float val) {
+		val = new Float(val);
+	}
+	
 	public void setValue(String val) {
 		value = val;
 	}
 	public void setValue(int val) {
 		value = new Integer(val);
+	}
+	
+	public void setValue(float val) {
+		value = new Float(val);
+	}
+	
+	public float getFloatValue() {
+		return (Float) value;
 	}
 	
 	public String getStringValue() {

@@ -299,12 +299,20 @@ void ifStatement() #IF : {}
 void declarationStatement() #void : {ArrayList<SymTabEntry> variableList;
 	                                 int index = 0;}
 {	<DOLLAR> <IDENTIFIER> {
+	  		if (symTabStack.getCurrentNestingLevel() != 1)	  		{	  		  index = (int) symTabStack.getLocalSymTab().getReference().getAttribute(ROUTINE_LOCALS_COUNT);
+	  		}
 			SymTabEntry typeId = symTabStack.lookup(token.image.toLowerCase());
             typeId.appendLineNumber(token.beginLine);
             TypeSpec type = typeId.getTypeSpec();
 	  
         }
         <IDENTIFIER> {
+            SymTabEntry entry = symTabStack.getLocalSymTab().lookup(token.image.toLowerCase());
+			if (entry != null)			{
+				handleError(token);
+				System.out.println("*** Variable already exists");
+				return;
+			}
             variableList = new ArrayList<SymTabEntry>();
             processVariableDecl(token, index++, variableList);
         }
@@ -343,7 +351,7 @@ void assignment() #ASSIGN : {}
 		if (type.getForm() == TypeFormImpl.PROCEDURE)
         {
     		entry.setDefinition(DefinitionImpl.PROCEDURE);
-    		entry.setAttribute(ROUTINE_SYMTAB, symTabStack.push());
+    		entry.setAttribute(ROUTINE_SYMTAB, symTabStack.push(entry));
  		}
     }
     <EQUALS> (

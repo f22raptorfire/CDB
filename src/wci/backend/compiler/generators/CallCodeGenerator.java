@@ -32,21 +32,8 @@ public class CallCodeGenerator extends StatementCodeGenerator {
    
     	ICodeNode parameterNode = children.get(1);
     	ArrayList<ICodeNode> params = parameterNode.getChildren();
-    	/*
-    	getstatic test/_references [Lwci/runtime/Referencer;
-    	ldc 0
-    	new wci/runtime/Referencer
-    	dup
-    	
-    	getstatic test/i Ljava/lang/String;
-    	
-    	invokenonvirtual wci/runtime/Referencer/<init>(Ljava/lang/String;)V
-    	aastore
-    	getstatic test/_references [Lwci/runtime/Referencer;
-    	ldc 0
-    	aaload
-    	*/
-    	String result = "";
+
+    	String result = "\n\t;CallCodeGenerator\n";
     	int referenceCount = 0;
     	if (params != null) {
 	    	for (int i = 0; i < params.size(); i++) {
@@ -86,7 +73,7 @@ public class CallCodeGenerator extends StatementCodeGenerator {
 	    	for (int i = start - 1; i >= 0; i--) {
 	    		ICodeNode paramNode = params.get(i);
 	    		if ((ICodeNodeTypeImpl) paramNode.getType() == ICodeNodeTypeImpl.REFERENCE) {
-	    			result += "\n\t;reference unwrap\n";
+	    			result += "\n\t;Reference unwrap\n";
 	    	    	result += "\tgetstatic " + programId.getName() + "/_references [Lwci/runtime/Referencer;\n";
 	    	    	result += "\tldc " + --referenceCount + "\n";
 	    	    	result += "\taaload\n";
@@ -97,6 +84,9 @@ public class CallCodeGenerator extends StatementCodeGenerator {
 	    			else
 	    			if (type == Predefined.stringType)
 	    				result += "\tinvokevirtual wci.runtime/Referencer/getStringValue()Ljava/lang/String;\n";
+	    			else
+	    			if (type == Predefined.realType)
+	    				result += "\tinvokevirtual wci.runtime/Referencer/getFloatValue()F\n";
 	    			result += "\tputstatic " + programId.getName() + "/" + child.getAttribute(ICodeKeyImpl.ID) + " " + type.getTypeId() + "\n";
 	    		}
 	    	}

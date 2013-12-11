@@ -4,29 +4,25 @@
 .field public static _database Lwci/runtime/CDBC;
 .field public static _references [Lwci/runtime/Referencer;
 
-.field public static i Ljava/lang/String;
-.field public static j Ljava/lang/String;
+.field public static i F
 
-.method static p(Ljava/lang/String;Ljava/lang/String;I)V
+.method static editReal(Lwci/runtime/Referencer;)V
 .limit stack 16
 .limit locals 10
 
-	getstatic java/lang/System/out Ljava/io/PrintStream;
+	ldc 2.3
+	fstore 1
+	ldc 3
+	fstore 2
 	aload 0
-	invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V
-	ldc "two"
-	astore 0
-	getstatic java/lang/System/out Ljava/io/PrintStream;
-	aload 0
-	invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V
-	ldc "three"
-	astore 1
-	getstatic java/lang/System/out Ljava/io/PrintStream;
+
+	;AddCodeGenerator
+	ldc 4.5
 	aload 1
-	invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V
-	getstatic java/lang/System/out Ljava/io/PrintStream;
-	iload 2
-	invokevirtual java/io/PrintStream/println(I)V
+	fdiv
+	aload 2
+	fadd
+	invokevirtual wci.runtime/Referencer/setValue(F)V
 	return
 
 .end method
@@ -55,24 +51,31 @@
 	ldc ""
 	invokenonvirtual wci/runtime/CDBC/<init>(Ljava/lang/String;)V
 	putstatic test/_database Lwci/runtime/CDBC;
-	ldc "zero"
-	putstatic test/i Ljava/lang/String;
-	ldc "one"
-	putstatic test/j Ljava/lang/String;
-	ldc 3
-	putstatic test/i Ljava/lang/String;
-	ldc "four"
-	getstatic test/j Ljava/lang/String;
-	ldc 3
-	ldc 1
-	isub
-	invokestatic test/p(Ljava/lang/String;Ljava/lang/String;I)V
+	ldc 1.2
+	putstatic test/i F
+
+	;CallCodeGenerator
+	getstatic test/_references [Lwci/runtime/Referencer;
+	ldc 0
+	new wci/runtime/Referencer
+	dup
+	getstatic test/i F
+	invokenonvirtual wci/runtime/Referencer/<init>(F)V
+	aastore
+	getstatic test/_references [Lwci/runtime/Referencer;
+	ldc 0
+	aaload
+	invokestatic test/editReal(Lwci/runtime/Referencer;)V
+
+	;Reference unwrap
+	getstatic test/_references [Lwci/runtime/Referencer;
+	ldc 0
+	aaload
+	invokevirtual wci.runtime/Referencer/getFloatValue()F
+	putstatic test/i F
 	getstatic java/lang/System/out Ljava/io/PrintStream;
-	getstatic test/i Ljava/lang/String;
-	invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V
-	getstatic java/lang/System/out Ljava/io/PrintStream;
-	getstatic test/j Ljava/lang/String;
-	invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V
+	getstatic test/i F
+	invokevirtual java/io/PrintStream/println(F)V
 	return
 
 .end method

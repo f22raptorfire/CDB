@@ -77,6 +77,19 @@ public class SymTabStackImpl
     }
 
     /**
+     * Push a new symbol table onto the symbol table stack.
+     * @return the pushed symbol table.
+     */
+    public SymTab push(SymTabEntry entry)
+    {
+        SymTab symTab = SymTabFactory.createSymTab(++currentNestingLevel);
+        add(symTab);
+        symTab.setReference(entry);
+        
+        return symTab;
+    }
+    
+    /**
      * Push a symbol table onto the symbol table stack.
      * @return the pushed symbol table.
      */

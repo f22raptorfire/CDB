@@ -1,20 +1,14 @@
 DATABASE "";
 
-$string i, j;
-i = "zero";
-j = "one";
-i = 3;
-$proc p;
-p = new ($string x y, $integer z) {
-	PRINTLN x;
-	x = "two";
-	PRINTLN x;
-	y = "three";
-	PRINTLN y;
-	PRINTLN z;
+$real i;
+$proc editReal;
+editReal = new (@real r) {
+	$real i, j;
+	i = 2.3;
+	j = 3;
+	r = 4.5 / i + j;
 };
 
-p("four", j, 3 - 1);
-
+i = 1.2;
+editReal(@i);
 PRINTLN i;
-PRINTLN j;

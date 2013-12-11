@@ -60,6 +60,11 @@ public class StatementCodeGenerator extends CodeGenerator
                 return integerGenerator.generate(node);
             }
 
+            case REAL_CONSTANT: {
+                RealCodeGenerator realGenerator = new RealCodeGenerator(this);
+                return realGenerator.generate(node);
+            }
+            
             case STRING_CONSTANT: {
                 StringCodeGenerator stringGenerator = new StringCodeGenerator(this);
                 return stringGenerator.generate(node);

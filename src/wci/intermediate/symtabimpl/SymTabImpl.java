@@ -20,7 +20,8 @@ public class SymTabImpl
     implements SymTab
 {
     private int nestingLevel;
-
+    private SymTabEntry reference;
+    
     public SymTabImpl(int nestingLevel)
     {
         this.nestingLevel = nestingLevel;
@@ -73,5 +74,13 @@ public class SymTabImpl
         }
 
         return list;  // sorted list of entries
+    }
+    
+    public void setReference(SymTabEntry entry) {
+    	reference = entry;
+    }
+    
+    public SymTabEntry getReference() {
+    	return reference;
     }
 }
