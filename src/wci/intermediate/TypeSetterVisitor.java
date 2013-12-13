@@ -23,6 +23,13 @@ public class TypeSetterVisitor extends CdbParserVisitorAdapter
         node.setTypeSpec(type);
     }
     
+    public Object visit(ASTMOD node, Object data)
+    {
+        Object obj = super.visit(node, data);
+        setType(node);
+        return obj;
+    }
+    
     public Object visit(ASTADD node, Object data)
     {
         Object obj = super.visit(node, data);

@@ -15,6 +15,7 @@ import wci.frontend.ASTIF;
 import wci.frontend.ASTINTEGER_CONSTANT;
 import wci.frontend.ASTLE;
 import wci.frontend.ASTLT;
+import wci.frontend.ASTMOD;
 import wci.frontend.ASTMULTIPLY;
 import wci.frontend.ASTNE;
 import wci.frontend.ASTNEGATE;
@@ -301,6 +302,16 @@ public class CdbParserVisitorAdapter implements CdbParserVisitor
 	@Override
 	public Object visit(ASTNEGATE node, Object data) {
 		node.setType(ICodeNodeTypeImpl.NEGATE);
+		int childCount = node.jjtGetNumChildren();
+		for (int i = 0; i < childCount; i++) {
+			node.addChild((ICodeNode) node.jjtGetChild(i));
+		}
+		return node.childrenAccept(this, data);
+	}
+
+	@Override
+	public Object visit(ASTMOD node, Object data) {
+		node.setType(ICodeNodeTypeImpl.MOD);
 		int childCount = node.jjtGetNumChildren();
 		for (int i = 0; i < childCount; i++) {
 			node.addChild((ICodeNode) node.jjtGetChild(i));

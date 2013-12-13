@@ -92,6 +92,23 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
       databaseStatement();
       label_1:
       while (true) {
+        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+        case IF:
+        case WHILE:
+        case FOR:
+        case DO:
+        case PRINT:
+        case PRINTLN:
+        case PROMPT:
+        case DOLLAR:
+        case IDENTIFIER:
+        case ERROR:
+          ;
+          break;
+        default:
+          jj_la1[0] = jj_gen;
+          break label_1;
+        }
         try {
           switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
           case IF:
@@ -110,7 +127,7 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
                  handleError(token);
             break;
           default:
-            jj_la1[0] = jj_gen;
+            jj_la1[1] = jj_gen;
             jj_consume_token(-1);
             throw new ParseException();
           }
@@ -121,23 +138,6 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
         } catch (NullPointerException ex) {
           handleError(token);
       System.out.println("Undefined Variable");
-        }
-        switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
-        case IF:
-        case WHILE:
-        case FOR:
-        case DO:
-        case PRINT:
-        case PRINTLN:
-        case PROMPT:
-        case DOLLAR:
-        case IDENTIFIER:
-        case ERROR:
-          ;
-          break;
-        default:
-          jj_la1[1] = jj_gen;
-          break label_1;
         }
       }
       jj_consume_token(0);
@@ -731,9 +731,9 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
 
   static final public void assignment() throws ParseException {
                              /*@bgen(jjtree) ASSIGN */
-  ASTASSIGN jjtn000 = new ASTASSIGN(JJTASSIGN);
-  boolean jjtc000 = true;
-  jjtree.openNodeScope(jjtn000);
+                             ASTASSIGN jjtn000 = new ASTASSIGN(JJTASSIGN);
+                             boolean jjtc000 = true;
+                             jjtree.openNodeScope(jjtn000);SimpleNode exp;
     try {
       variable();
         SymTabEntry entry = symTabStack.lookup(token.image);
@@ -752,7 +752,7 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
       case STRING_LIT:
       case INTEGER:
       case REAL:
-        expression();
+        simpleExpression();
         break;
       case NEW:
         routine(entry);
@@ -1227,29 +1227,29 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
       break;
     case MINUS:
       jj_consume_token(MINUS);
-            ASTNEGATE jjtn001 = new ASTNEGATE(JJTNEGATE);
-            boolean jjtc001 = true;
-            jjtree.openNodeScope(jjtn001);
+          ASTNEGATE jjtn001 = new ASTNEGATE(JJTNEGATE);
+          boolean jjtc001 = true;
+          jjtree.openNodeScope(jjtn001);
       try {
         term();
       } catch (Throwable jjte001) {
-            if (jjtc001) {
-              jjtree.clearNodeScope(jjtn001);
-              jjtc001 = false;
-            } else {
-              jjtree.popNode();
-            }
-            if (jjte001 instanceof RuntimeException) {
-              {if (true) throw (RuntimeException)jjte001;}
-            }
-            if (jjte001 instanceof ParseException) {
-              {if (true) throw (ParseException)jjte001;}
-            }
-            {if (true) throw (Error)jjte001;}
+          if (jjtc001) {
+            jjtree.clearNodeScope(jjtn001);
+            jjtc001 = false;
+          } else {
+            jjtree.popNode();
+          }
+          if (jjte001 instanceof RuntimeException) {
+            {if (true) throw (RuntimeException)jjte001;}
+          }
+          if (jjte001 instanceof ParseException) {
+            {if (true) throw (ParseException)jjte001;}
+          }
+          {if (true) throw (Error)jjte001;}
       } finally {
-            if (jjtc001) {
-              jjtree.closeNodeScope(jjtn001,  1);
-            }
+          if (jjtc001) {
+            jjtree.closeNodeScope(jjtn001,  1);
+          }
       }
       break;
     default:
@@ -1271,56 +1271,56 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case PLUS:
         jj_consume_token(PLUS);
-              ASTADD jjtn002 = new ASTADD(JJTADD);
-              boolean jjtc002 = true;
-              jjtree.openNodeScope(jjtn002);
+         ASTADD jjtn002 = new ASTADD(JJTADD);
+         boolean jjtc002 = true;
+         jjtree.openNodeScope(jjtn002);
         try {
           term();
         } catch (Throwable jjte002) {
-              if (jjtc002) {
-                jjtree.clearNodeScope(jjtn002);
-                jjtc002 = false;
-              } else {
-                jjtree.popNode();
-              }
-              if (jjte002 instanceof RuntimeException) {
-                {if (true) throw (RuntimeException)jjte002;}
-              }
-              if (jjte002 instanceof ParseException) {
-                {if (true) throw (ParseException)jjte002;}
-              }
-              {if (true) throw (Error)jjte002;}
+         if (jjtc002) {
+           jjtree.clearNodeScope(jjtn002);
+           jjtc002 = false;
+         } else {
+           jjtree.popNode();
+         }
+         if (jjte002 instanceof RuntimeException) {
+           {if (true) throw (RuntimeException)jjte002;}
+         }
+         if (jjte002 instanceof ParseException) {
+           {if (true) throw (ParseException)jjte002;}
+         }
+         {if (true) throw (Error)jjte002;}
         } finally {
-              if (jjtc002) {
-                jjtree.closeNodeScope(jjtn002,  2);
-              }
+         if (jjtc002) {
+           jjtree.closeNodeScope(jjtn002,  2);
+         }
         }
         break;
       case MINUS:
         jj_consume_token(MINUS);
-              ASTSUBTRACT jjtn003 = new ASTSUBTRACT(JJTSUBTRACT);
-              boolean jjtc003 = true;
-              jjtree.openNodeScope(jjtn003);
+          ASTSUBTRACT jjtn003 = new ASTSUBTRACT(JJTSUBTRACT);
+          boolean jjtc003 = true;
+          jjtree.openNodeScope(jjtn003);
         try {
           term();
         } catch (Throwable jjte003) {
-              if (jjtc003) {
-                jjtree.clearNodeScope(jjtn003);
-                jjtc003 = false;
-              } else {
-                jjtree.popNode();
-              }
-              if (jjte003 instanceof RuntimeException) {
-                {if (true) throw (RuntimeException)jjte003;}
-              }
-              if (jjte003 instanceof ParseException) {
-                {if (true) throw (ParseException)jjte003;}
-              }
-              {if (true) throw (Error)jjte003;}
+          if (jjtc003) {
+            jjtree.clearNodeScope(jjtn003);
+            jjtc003 = false;
+          } else {
+            jjtree.popNode();
+          }
+          if (jjte003 instanceof RuntimeException) {
+            {if (true) throw (RuntimeException)jjte003;}
+          }
+          if (jjte003 instanceof ParseException) {
+            {if (true) throw (ParseException)jjte003;}
+          }
+          {if (true) throw (Error)jjte003;}
         } finally {
-              if (jjtc003) {
-                jjtree.closeNodeScope(jjtn003,  2);
-              }
+          if (jjtc003) {
+            jjtree.closeNodeScope(jjtn003,  2);
+          }
         }
         break;
       default:
@@ -1331,7 +1331,6 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
     }
   }
 
-// i = 2 * -3
   static final public void term() throws ParseException {
     factor();
     label_8:
@@ -1339,6 +1338,7 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case STAR:
       case SLASH:
+      case PERCENT:
         ;
         break;
       default:
@@ -1397,6 +1397,33 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
         } finally {
               if (jjtc002) {
                 jjtree.closeNodeScope(jjtn002,  2);
+              }
+        }
+        break;
+      case PERCENT:
+        jj_consume_token(PERCENT);
+              ASTMOD jjtn003 = new ASTMOD(JJTMOD);
+              boolean jjtc003 = true;
+              jjtree.openNodeScope(jjtn003);
+        try {
+          factor();
+        } catch (Throwable jjte003) {
+              if (jjtc003) {
+                jjtree.clearNodeScope(jjtn003);
+                jjtc003 = false;
+              } else {
+                jjtree.popNode();
+              }
+              if (jjte003 instanceof RuntimeException) {
+                {if (true) throw (RuntimeException)jjte003;}
+              }
+              if (jjte003 instanceof ParseException) {
+                {if (true) throw (ParseException)jjte003;}
+              }
+              {if (true) throw (Error)jjte003;}
+        } finally {
+              if (jjtc003) {
+                jjtree.closeNodeScope(jjtn003,  2);
               }
         }
         break;
@@ -1551,6 +1578,11 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
     finally { jj_save(0, xla); }
   }
 
+  static private boolean jj_3R_11() {
+    if (jj_scan_token(IDENTIFIER)) return true;
+    return false;
+  }
+
   static private boolean jj_3R_9() {
     if (jj_3R_10()) return true;
     return false;
@@ -1564,11 +1596,6 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
 
   static private boolean jj_3_1() {
     if (jj_3R_9()) return true;
-    return false;
-  }
-
-  static private boolean jj_3R_11() {
-    if (jj_scan_token(IDENTIFIER)) return true;
     return false;
   }
 
@@ -1597,10 +1624,10 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
       jj_la1_0 = new int[] {0x417c400,0x417c400,0x417c400,0x600000,0x417c400,0x417c400,0x0,0x0,0x0,0x417c400,0x417c400,0x417c400,0x417c400,0x800,0x0,0x800000,0x0,0x2000000,0x0,0x2000000,0x2000000,0x6000000,0x6000000,0x0,0x0,0xf0000000,0xf0000000,0x0,0x0,0x0,0x0,0x0,0x0,};
    }
    private static void jj_la1_init_1() {
-      jj_la1_1 = new int[] {0x100000,0x100000,0x100000,0x0,0x100000,0x108000,0x100000,0xf02040,0x100000,0x108000,0x108000,0x108000,0x108000,0x0,0x4,0xf02040,0x2000,0xf02040,0x4,0xf02040,0xf02040,0x0,0x0,0x100000,0x4004,0x3,0x3,0xf02040,0x60,0x60,0x180,0x180,0xf02000,};
+      jj_la1_1 = new int[] {0x200000,0x200000,0x200000,0x0,0x200000,0x210000,0x200000,0x1e04040,0x200000,0x210000,0x210000,0x210000,0x210000,0x0,0x4,0x1e04040,0x4000,0x1e04040,0x4,0x1e04040,0x1e04040,0x0,0x0,0x200000,0x8004,0x3,0x3,0x1e04040,0x60,0x60,0x380,0x380,0x1e04000,};
    }
    private static void jj_la1_init_2() {
-      jj_la1_2 = new int[] {0x1,0x1,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,};
+      jj_la1_2 = new int[] {0x2,0x2,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,};
    }
   static final private JJCalls[] jj_2_rtns = new JJCalls[1];
   static private boolean jj_rescan = false;
@@ -1810,7 +1837,7 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
   /** Generate ParseException. */
   static public ParseException generateParseException() {
     jj_expentries.clear();
-    boolean[] la1tokens = new boolean[65];
+    boolean[] la1tokens = new boolean[66];
     if (jj_kind >= 0) {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
@@ -1830,7 +1857,7 @@ public class CdbParser/*@bgen(jjtree)*/implements CdbParserTreeConstants, CdbPar
         }
       }
     }
-    for (int i = 0; i < 65; i++) {
+    for (int i = 0; i < 66; i++) {
       if (la1tokens[i]) {
         jj_expentry = new int[1];
         jj_expentry[0] = i;

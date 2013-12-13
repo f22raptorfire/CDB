@@ -100,6 +100,11 @@ public class StatementCodeGenerator extends CodeGenerator
             	return divideGenerator.generate(node);
             }
             
+            case MOD: {
+            	ModCodeGenerator modGenerator = new ModCodeGenerator(this);
+            	return modGenerator.generate(node);
+            }
+            
             case EE:
             case NE:
             case LT:

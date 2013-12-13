@@ -77,53 +77,55 @@ public interface CdbParserConstants {
   /** RegularExpression Id. */
   int SLASH = 40;
   /** RegularExpression Id. */
-  int QUOTE = 41;
+  int PERCENT = 41;
   /** RegularExpression Id. */
-  int DOUBLE_QUOTE = 42;
+  int QUOTE = 42;
   /** RegularExpression Id. */
-  int LEFT_BRACKET = 43;
+  int DOUBLE_QUOTE = 43;
   /** RegularExpression Id. */
-  int RIGHT_BRACKET = 44;
+  int LEFT_BRACKET = 44;
   /** RegularExpression Id. */
-  int LEFT_PAREN = 45;
+  int RIGHT_BRACKET = 45;
   /** RegularExpression Id. */
-  int RIGHT_PAREN = 46;
+  int LEFT_PAREN = 46;
   /** RegularExpression Id. */
-  int LEFT_BRACE = 47;
+  int RIGHT_PAREN = 47;
   /** RegularExpression Id. */
-  int RIGHT_BRACE = 48;
+  int LEFT_BRACE = 48;
   /** RegularExpression Id. */
-  int AND = 49;
+  int RIGHT_BRACE = 49;
   /** RegularExpression Id. */
-  int OR = 50;
+  int AND = 50;
   /** RegularExpression Id. */
-  int UNDERSCORE = 51;
+  int OR = 51;
   /** RegularExpression Id. */
-  int IDENTIFIER = 52;
+  int UNDERSCORE = 52;
   /** RegularExpression Id. */
-  int STRING_LIT = 53;
+  int IDENTIFIER = 53;
   /** RegularExpression Id. */
-  int INTEGER = 54;
+  int STRING_LIT = 54;
   /** RegularExpression Id. */
-  int REAL = 55;
+  int INTEGER = 55;
   /** RegularExpression Id. */
-  int LETTER = 56;
+  int REAL = 56;
   /** RegularExpression Id. */
-  int DIGIT = 57;
+  int LETTER = 57;
   /** RegularExpression Id. */
-  int SIGN = 58;
+  int DIGIT = 58;
   /** RegularExpression Id. */
-  int UNSIGNED_NUMBER = 59;
+  int SIGN = 59;
   /** RegularExpression Id. */
-  int WHOLE = 60;
+  int UNSIGNED_NUMBER = 60;
   /** RegularExpression Id. */
-  int FRACTION = 61;
+  int WHOLE = 61;
   /** RegularExpression Id. */
-  int EXPONENT = 62;
+  int FRACTION = 62;
   /** RegularExpression Id. */
-  int EOL = 63;
+  int EXPONENT = 63;
   /** RegularExpression Id. */
-  int ERROR = 64;
+  int EOL = 64;
+  /** RegularExpression Id. */
+  int ERROR = 65;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -173,6 +175,7 @@ public interface CdbParserConstants {
     "\"-\"",
     "\"*\"",
     "\"/\"",
+    "\"%\"",
     "\"\\\'\"",
     "\"\\\"\"",
     "\"[\"",

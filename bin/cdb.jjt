@@ -150,6 +150,7 @@ TOKEN: /* Special symbols */
   | <MINUS        : "-">
   | <STAR         : "*">
   | <SLASH        : "/">
+  | <PERCENT      : "%">
   | <QUOTE        : "'">
   | <DOUBLE_QUOTE : "\"">
   | <LEFT_BRACKET : "[">
@@ -209,7 +210,7 @@ SimpleNode script(String programName) #COMPOUND : { SimpleNode rootNode; }
     catch (NullPointerException ex) {	  handleError(token);
       System.out.println("Undefined Variable");
     }
-  )+
+  )*
   <EOF>  { return jjtThis; }
 }
 
@@ -343,7 +344,7 @@ void assignmentStatement() #void : {}
     <SEMICOLON>
 }
 
-void assignment() #ASSIGN : {}
+void assignment() #ASSIGN : {SimpleNode exp;}
 {	variable() {
         SymTabEntry entry = symTabStack.lookup(token.image);
         entry.appendLineNumber(token.beginLine);
@@ -355,7 +356,7 @@ void assignment() #ASSIGN : {}
  		}
     }
     <EQUALS> (
-    	expression()
+    	simpleExpression()
       | routine(entry) {jjtree.popNode();}
     )
 }
@@ -438,25 +439,23 @@ void expression() #void : {}
       | <LE> simpleExpression() #LE(2)
       | <GT> simpleExpression() #GT(2)
       | <GE> simpleExpression() #GE(2)
-	)?  
+	)?
 }
 
 void simpleExpression() #void : {}
 {
-  (      term()
-    | "-" term() #NEGATE(1)
-  )
-    (
-        "+" term() #ADD(2)
-      | "-" term() #SUBTRACT(2)
-    )*     
+  (term()
+  | "-" term() #NEGATE(1))
+  ("+" term() #ADD(2)
+  | "-" term() #SUBTRACT(2))*
 }
-// i = 2 * -3
+
 void term() #void : {}
 {
     factor() (
         "*" factor() #MULTIPLY(2)
       | "/" factor() #DIVIDE(2)
+      | "%" factor() #MOD(2)
     )*
 }
 

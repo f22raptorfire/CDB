@@ -4,32 +4,6 @@
 .field public static _database Lwci/runtime/CDBC;
 .field public static _references [Lwci/runtime/Referencer;
 
-.field public static i I
-
-.method static editReal(I)V
-.limit stack 16
-.limit locals 10
-
-	getstatic java/lang/System/out Ljava/io/PrintStream;
-	iload 0
-	invokevirtual java/io/PrintStream/println(I)V
-	iload 0
-	ldc 1
-	isub
-	istore 0
-	iload 0
-	ldc 0
-	if_icmpgt L000
-	goto L001
-L000:
-
-	;CallCodeGenerator
-	iload 0
-	invokestatic test/editReal(I)V
-L001:
-	return
-
-.end method
 
 .method public <init>()V
 .limit stack 1
@@ -55,16 +29,21 @@ L001:
 	ldc ""
 	invokenonvirtual wci/runtime/CDBC/<init>(Ljava/lang/String;)V
 	putstatic test/_database Lwci/runtime/CDBC;
-
-	;AddCodeGenerator
-	ldc 5
-	ldc "yes"
-	iadd
-	putstatic test/i I
-
-	;CallCodeGenerator
-	getstatic test/i I
-	invokestatic test/editReal(I)V
+	ldc 1
+	itof
+	ldc 2.2
+	fcmpl
+	iconst_0
+	if_icmplt L000
+	getstatic java/lang/System/out Ljava/io/PrintStream;
+	ldc "Else"
+	invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V
+	goto L001
+L000:
+	getstatic java/lang/System/out Ljava/io/PrintStream;
+	ldc "Then"
+	invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V
+L001:
 	return
 
 .end method

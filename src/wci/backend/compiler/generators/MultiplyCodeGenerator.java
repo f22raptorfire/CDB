@@ -22,7 +22,7 @@ public class MultiplyCodeGenerator extends StatementCodeGenerator {
     	TypeSpec type = node.getTypeSpec();
     	result += cg.generate(children.get(0));
 		if (type == Predefined.realType && children.get(0).getTypeSpec() == Predefined.integerType)
-			result += "\titof\n";
+			result += "\ti2f\n";
 		result += cg.generate(children.get(1));
 		if (type == Predefined.realType && children.get(1).getTypeSpec() == Predefined.integerType)
 			result += "\ti2f\n";

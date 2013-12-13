@@ -1,12 +1,6 @@
 DATABASE "";
 
-$integer i;
-i = 5 + "yes";
-$proc editReal;
-editReal = new ($integer i) {
-	PRINTLN i;
-	i = i - 1;
-	if (i > 0)
-		editReal(i);
-};
-editReal(i);
+if (1 < 2.2) {
+	PRINTLN "Then";
+} else
+	PRINTLN "Else";
