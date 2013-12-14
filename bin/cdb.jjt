@@ -55,15 +55,19 @@ public class CdbParser
         // Parse a CDB program.
         Reader    reader = new FileReader(sourceFilePath);
         CdbParser parser = new CdbParser(reader);
-        SimpleNode rootNode = parser.script(programName);
+        SimpleNode rootNode = null;
+        try        {          rootNode = parser.script(programName);
+        } catch (Exception e)        {          System.out.println("Fatal Error!");
+          return;
+        }
 
+		// Visit the parse tree nodes to decorate them with type information.
+        TypeSetterVisitor typeVisitor = new TypeSetterVisitor();
+        rootNode.jjtAccept(typeVisitor, symTabStack);
+        
         // Print the cross-reference table.
         CrossReferencer crossReferencer = new CrossReferencer();
         crossReferencer.print(symTabStack);
-
-        // Visit the parse tree nodes to decorate them with type information.
-        TypeSetterVisitor typeVisitor = new TypeSetterVisitor();
-        rootNode.jjtAccept(typeVisitor, null);
         
 		ArrayList<SymTabEntry> entries = ((SymTab)programId.getAttribute(SymTabKeyImpl.ROUTINE_SYMTAB)).sortedEntries();
     	for (SymTabEntry entry : entries) {
@@ -200,15 +204,10 @@ SimpleNode script(String programName) #COMPOUND : { SimpleNode rootNode; }
   (
     try {
         statement()
-      | Error() {handleError(token);}
     }
-    catch (ParseException ex) {
-      handleError(token);
-      System.out.println("Parse Exception\n");
-      ex.printStackTrace();
+    catch (wci.frontend.ParseException ex) {	  handleError(token);
     }
     catch (NullPointerException ex) {	  handleError(token);
-      System.out.println("Undefined Variable");
     }
   )*
   <EOF>  { return jjtThis; }
@@ -221,7 +220,6 @@ SimpleNode databaseStatement() #DATABASE : {}
 
 void statement() #void : {}
 {
-  
   ( LOOKAHEAD(2)
        assignmentStatement()
     |  routineCall()
@@ -233,6 +231,7 @@ void statement() #void : {}
     |  forLoop()
     |  whileLoop()
     |  promptStatement()
+    |  Error()  { handleError(token); }
   )
 }
 
@@ -453,7 +452,7 @@ void simpleExpression() #void : {}
 void term() #void : {}
 {
     factor() (
-        "*" factor() #MULTIPLY(2)
+        "*" factor() #MULTIPLY(2) 
       | "/" factor() #DIVIDE(2)
       | "%" factor() #MOD(2)
     )*
@@ -484,12 +483,14 @@ void integerConstant() #INTEGER_CONSTANT : {}
     <INTEGER> {
         jjtThis.setTypeSpec(Predefined.integerType);
         jjtThis.setAttribute(VALUE, Integer.parseInt(token.image));
+	    jjtThis.setAttribute(LINE, token.beginLine);
     }
 }
 
 void stringConstant() #STRING_CONSTANT : {String result;}
 {	<STRING_LIT> {
-	    result = token.image.substring(1, token.image.length() - 1);		jjtThis.setTypeSpec(Predefined.stringType);
+	    result = token.image.substring(1, token.image.length() - 1);
+	    jjtThis.setAttribute(LINE, token.beginLine);		jjtThis.setTypeSpec(Predefined.stringType);
 		jjtThis.setAttribute(VALUE, result);
 	}
 }
@@ -499,6 +500,7 @@ void realConstant() #REAL_CONSTANT : {}
     <REAL> {
         jjtThis.setTypeSpec(Predefined.realType);
         jjtThis.setAttribute(VALUE, Float.parseFloat(token.image));
+	    jjtThis.setAttribute(LINE, token.beginLine);
     }
 }
 

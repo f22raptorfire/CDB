@@ -25,7 +25,7 @@ public class DatabaseCodeGenerator extends StatementCodeGenerator {
     	String result = "\t;CDBC init\n\tnew wci/runtime/CDBC\n\tdup\n";
     	result += (String) cg.generate(node.getChildren().get(0));
     	result += "\tinvokenonvirtual wci/runtime/CDBC/<init>(Ljava/lang/String;)V\n";
-    	result += "\tputstatic test/_database Lwci/runtime/CDBC;\n";
+    	result += "\tputstatic test/_database Lwci/runtime/CDBC;\n\n";
     	return result;
     }
 }

@@ -1,0 +1,15 @@
+database "";
+
+$proc move;
+move = new ($integer n from to via) {
+	if (n > 0) {
+		move(n - 1, from, via, to);
+		PRINT "Move disk from pole ";
+		PRINT from;
+		PRINT " to pole ";
+		PRINTLN to;
+		move(n - 1, via, to, from);
+	}
+};
+
+move(4, 1, 2, 3);

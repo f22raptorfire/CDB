@@ -1,0 +1,27 @@
+----- CDB CODE -----
+
+$integer i;
+for (i = 0; i < 4; i = i + 1) {
+	PRINTLN i;
+}
+
+----- JASMIN CODE -----
+
+	ldc 0
+	putstatic test/i I
+L000:
+	getstatic test/i I
+	ldc 4
+	if_icmplt L001
+	goto L002
+L001:
+	getstatic java/lang/System/out Ljava/io/PrintStream;
+	getstatic test/i I
+	invokevirtual java/io/PrintStream/println(I)V
+	getstatic test/i I
+	ldc 1
+	iadd
+	putstatic test/i I
+	goto L000
+L002:
+	return

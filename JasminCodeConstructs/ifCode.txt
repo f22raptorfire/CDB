@@ -1,0 +1,23 @@
+----- CDB CODE -----
+
+if (1 < 2) {
+	PRINTLN("Success!");
+} else {
+	PRINTLN("Failure!");
+}
+
+----- JASMIN CODE -----
+
+	ldc 1
+	ldc 2
+	if_icmplt L000
+	getstatic java/lang/System/out Ljava/io/PrintStream;
+	ldc "Failure!"
+	invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V
+	goto L001
+L000:
+	getstatic java/lang/System/out Ljava/io/PrintStream;
+	ldc "Success!"
+	invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V
+L001:
+	return

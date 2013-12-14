@@ -1,5 +1,7 @@
 package wci.intermediate;
 
+import java.util.ArrayList;
+
 import wci.frontend.ASTADD;
 import wci.frontend.ASTASSIGN;
 import wci.frontend.ASTCALL;
@@ -32,7 +34,11 @@ import wci.frontend.ASTVARIABLE;
 import wci.frontend.ASTWHILE;
 import wci.frontend.CdbParserVisitor;
 import wci.frontend.SimpleNode;
+import wci.intermediate.icodeimpl.ICodeKeyImpl;
 import wci.intermediate.icodeimpl.ICodeNodeTypeImpl;
+import wci.intermediate.symtabimpl.DefinitionImpl;
+import wci.intermediate.symtabimpl.Predefined;
+import wci.intermediate.symtabimpl.SymTabKeyImpl;
 
 public class CdbParserVisitorAdapter implements CdbParserVisitor
 {
@@ -142,7 +148,21 @@ public class CdbParserVisitorAdapter implements CdbParserVisitor
 		for (int i = 0; i < childCount; i++) {
 			node.addChild((ICodeNode) node.jjtGetChild(i));
 		}
-		return node.childrenAccept(this, data);
+		SimpleNode node0 = (SimpleNode) node.jjtGetChild(0);
+		node0.jjtAccept(this, data);
+		SimpleNode node1 = (SimpleNode) node.jjtGetChild(1);
+		node1.jjtAccept(this, data);
+		TypeSpec variable = (TypeSpec) node0.getTypeSpec();
+		TypeSpec expression = (TypeSpec) node1.getTypeSpec();
+		if (variable != expression && (variable != Predefined.realType && expression != Predefined.integerType)) {
+			Object line = node1.getAttribute(ICodeKeyImpl.LINE);
+			while (line == null) {
+				node1 = (SimpleNode) node1.jjtGetChild(0);
+				line = node1.getAttribute(ICodeKeyImpl.LINE);
+			}
+			System.out.println("*** ERROR: At line " + line + " received " + expression.getIdentifier().getName() + " : expected " + variable.getIdentifier().getName());
+		}
+		return data;
 	}
 
 	@Override
@@ -276,7 +296,32 @@ public class CdbParserVisitorAdapter implements CdbParserVisitor
 		for (int i = 0; i < childCount; i++) {
 			node.addChild((ICodeNode) node.jjtGetChild(i));
 		}
-		return node.childrenAccept(this, data);
+		node.childrenAccept(this, data);
+		SimpleNode procedure = (SimpleNode) node.jjtGetChild(0);
+		String id = (String)procedure.getAttribute(ICodeKeyImpl.ID);
+		SymTabEntry entry = ((SymTabStack) data).lookup(id);
+		ArrayList<SymTabEntry> params = (ArrayList<SymTabEntry>) entry.getAttribute(SymTabKeyImpl.ROUTINE_PARMS);
+		int childrenCount = node.jjtGetChild(1).jjtGetNumChildren();
+		String line = "" + entry.getLineNumbers().get(entry.getLineNumbers().size() - 1);
+		if (childrenCount != params.size()) {
+			System.out.println("*** ERROR: Incorrect number of parameters on line " + line);
+			return data;
+		}
+		SimpleNode parameterNode = (SimpleNode) node.jjtGetChild(1);
+		TypeSpec expected;
+		TypeSpec received;
+		for (int i = 0; i < childrenCount; i++) {
+			expected = params.get(i).getTypeSpec();
+			received = ((SimpleNode)parameterNode.jjtGetChild(i)).getTypeSpec();
+			if (params.get(i).getDefinition() == DefinitionImpl.REFERENCE && ((ICodeNode)parameterNode.jjtGetChild(i)).getType() != ICodeNodeTypeImpl.REFERENCE) {
+				System.out.println("*** ERROR: At line " + line + " received " + received.getIdentifier().getName() + " expected " + expected.getIdentifier().getName() + " reference");
+				continue;
+			}
+			if (expected != received) {
+				System.out.println("*** ERROR: At line " + line + " received " + received.getIdentifier().getName() + " expected " + expected.getIdentifier().getName());
+			}
+		}
+		return data;
 	}
 
 	@Override

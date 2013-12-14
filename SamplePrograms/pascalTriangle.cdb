@@ -1,0 +1,20 @@
+DATABASE "";
+
+$PROC pascalTriangle;
+
+pascalTriangle = new ($integer n) {
+	$integer c, i, j, k;
+	
+	for(i = 0; i < n; i = i + 1) {
+		c = 1;
+
+		for(k = 0; k <= i; k = k + 1) {
+			PRINT c;
+			PRINT " ";
+			c = c * (i - k) / (k + 1);
+		}
+		PRINTLN "";
+	}
+};
+
+pascalTriangle(8);

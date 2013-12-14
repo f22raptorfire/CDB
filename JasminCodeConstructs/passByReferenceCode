@@ -1,0 +1,64 @@
+----- CDB CODE -----
+
+$proc referenceProc;
+referenceProc = new (@integer x) {
+	x = 3;
+};
+
+$integer i;
+i = 5;
+referenceProc(@i);
+PRINTLN i;
+
+----- JASMIN CODE -----
+
+.field public static _references [Lwci/runtime/Referencer;
+.field public static i I
+
+.method static referenceProc(Lwci/runtime/Referencer;)V
+.limit stack 16
+.limit locals 10
+
+	aload 0
+	ldc 3
+	invokevirtual wci.runtime/Referencer/setValue(I)V
+	return
+
+.end method
+
+.method public static main([Ljava/lang/String;)V
+.limit stack  16
+.limit locals 10
+
+	;References init:
+	bipush 10
+	anewarray wci/runtime/Referencer
+	putstatic test/_references [Lwci/runtime/Referencer;
+
+	ldc 5
+	putstatic test/i I
+
+	getstatic test/_references [Lwci/runtime/Referencer;
+	ldc 0
+	new wci/runtime/Referencer
+	dup
+	getstatic test/i I
+	invokenonvirtual wci/runtime/Referencer/<init>(I)V
+	aastore
+	getstatic test/_references [Lwci/runtime/Referencer;
+	ldc 0
+	aaload
+	invokestatic test/referenceProc(Lwci/runtime/Referencer;)V
+
+	;Reference unwrap
+	getstatic test/_references [Lwci/runtime/Referencer;
+	ldc 0
+	aaload
+	invokevirtual wci.runtime/Referencer/getIntegerValue()I
+	putstatic test/i I
+	getstatic java/lang/System/out Ljava/io/PrintStream;
+	getstatic test/i I
+	invokevirtual java/io/PrintStream/println(I)V
+	return
+
+.end method

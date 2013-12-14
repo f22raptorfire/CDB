@@ -208,7 +208,11 @@ public class CDBC {
 		for (int i = 0; i < rowCount; i++) {
 			comma = "";
 			for (int j = 0; j < columnCount; j++) {
-				result += comma + table.getValueAt(i, j);
+				try {
+					result += comma + table.getValueAt(i, j);
+				} catch (Exception e) {
+					
+				}
 				comma = ",";
 			}
 			result += "\n";
