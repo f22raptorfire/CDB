@@ -1,7 +1,7 @@
-DATABASE "C:\Users\Jason\Documents\GitHub\CDB";
+DATABASE "";
 
 $integer i;
-for  (i = 0; i < 3; i = i + 1) {
+for  (i = 0; i < 2; i = i + 1) {
 	PROMPT ADD "test";
 	PROMPT SHOW "test";
 }

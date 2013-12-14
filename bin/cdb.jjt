@@ -72,7 +72,7 @@ public class CdbParser
 		ArrayList<SymTabEntry> entries = ((SymTab)programId.getAttribute(SymTabKeyImpl.ROUTINE_SYMTAB)).sortedEntries();
     	for (SymTabEntry entry : entries) {
     		if (entry.getDefinition() == DefinitionImpl.PROCEDURE) {
-				((SimpleNode)entry.getAttribute(ROUTINE_CODE)).jjtAccept(typeVisitor, null);
+				((SimpleNode)entry.getAttribute(ROUTINE_CODE)).jjtAccept(typeVisitor, symTabStack);
     		}
     	}
 
